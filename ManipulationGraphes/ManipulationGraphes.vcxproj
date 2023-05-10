@@ -151,7 +151,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CFichierGraphe.cpp" />
     <ClCompile Include="ManipulationGraphes.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CFichierGraphe.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
