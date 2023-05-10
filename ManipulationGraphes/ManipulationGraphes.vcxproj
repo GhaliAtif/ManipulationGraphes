@@ -151,10 +151,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CAfficherException.cpp" />
+    <ClCompile Include="CException.cpp" />
     <ClCompile Include="CFichierGraphe.cpp" />
     <ClCompile Include="ManipulationGraphes.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CAfficherException.h" />
+    <ClInclude Include="CException.h" />
     <ClInclude Include="CFichierGraphe.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
