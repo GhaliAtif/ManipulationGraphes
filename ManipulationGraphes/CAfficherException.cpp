@@ -1,19 +1,20 @@
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
 
-#include "CAfficherException.h"
+#include "CException.h"
+
+using namespace std;
 
 /*************************************************************************
-***** EXCAfficherErreur : Affiche l'erreur							 *****
+***** AFEAFFICHERERREUR : affiche l'erreur							 *****
 **************************************************************************
 ***** Entree: (rien)												 *****
 ***** Necessite: (rien)												 *****
 ***** Sortie: (rien)												 *****
 ***** Entraine : lit le message d'erreur dans cEXCErreurs			 *****
 *************************************************************************/
-void CAfficherException::AFEAfficherErreur()
+void CException::AFEAfficherErreur()
 {
-	std::cout << cEXCErreurs << "\n\n";
+	cout << cEXCErreurs << endl << endl;
 }

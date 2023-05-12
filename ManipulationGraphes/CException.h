@@ -51,6 +51,21 @@ class CException
 			return uiEXCCodeErreurs;
 		}
 
+
+
+		/* ----- Dans le fichier CAfficherException.h -----*/
+
+		/*************************************************************************
+		***** AFEAFFICHERERREUR : affiche l'erreur							 *****
+		**************************************************************************
+		***** Entree: (rien)												 *****
+		***** Necessite: (rien)												 *****
+		***** Sortie: (rien)												 *****
+		***** Entraine : lit le message d'erreur dans cEXCErreurs			 *****
+		*************************************************************************/
+		void AFEAfficherErreur();
+
+
 };
 
 

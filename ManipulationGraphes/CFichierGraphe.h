@@ -1,8 +1,6 @@
 #ifndef CFICHIERGRAPHE_H
 #define CFICHIERGRAPHE_H
 
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <istream>
@@ -11,8 +9,12 @@
 
 #include "CException.h"
 
-class CFichierGraphe {
+class CFichierGraphe 
+{
+	public:
 
+
+	private:
 
 
 };
