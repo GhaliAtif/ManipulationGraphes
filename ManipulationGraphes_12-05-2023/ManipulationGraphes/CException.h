@@ -1,6 +1,8 @@
 #ifndef CEXCEPTION_H
 #define CEXCEPTION_H
 
+#define EXC_VIOLATION_ACCES 1
+
 class CException
 {
 	private:

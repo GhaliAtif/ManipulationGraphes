@@ -19,4 +19,4 @@ class CFichierGraphe
 
 };
 
-#endif // !CFICHIERGRAPHE_H
+#endif

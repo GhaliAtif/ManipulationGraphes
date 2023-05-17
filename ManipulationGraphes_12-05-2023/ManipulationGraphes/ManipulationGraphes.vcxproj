@@ -152,14 +152,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CAfficherException.cpp" />
+    <ClCompile Include="CGestionGraphe.cpp" />
+    <ClCompile Include="CArc.cpp" />
     <ClCompile Include="CException.cpp" />
     <ClCompile Include="CFichierGraphe.cpp" />
+    <ClCompile Include="CGraphe.cpp" />
+    <ClCompile Include="CSommet.cpp" />
     <ClCompile Include="ManipulationGraphes.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CAfficherException.h" />
+    <ClInclude Include="CArc.h" />
     <ClInclude Include="CException.h" />
     <ClInclude Include="CFichierGraphe.h" />
+    <ClInclude Include="CGraphe.h" />
+    <ClInclude Include="CSommet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
