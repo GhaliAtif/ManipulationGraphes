@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -152,14 +152,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CAfficherException.cpp" />
+    <ClCompile Include="CArc.cpp" />
     <ClCompile Include="CException.cpp" />
     <ClCompile Include="CFichierGraphe.cpp" />
+    <ClCompile Include="CGraphe.cpp" />
+    <ClCompile Include="CSommet.cpp" />
     <ClCompile Include="ManipulationGraphes.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CAfficherException.h" />
+    <ClInclude Include="CArc.h" />
     <ClInclude Include="CException.h" />
     <ClInclude Include="CFichierGraphe.h" />
+    <ClInclude Include="CGraphe.h" />
+    <ClInclude Include="CSommet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

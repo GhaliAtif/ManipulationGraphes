@@ -1,6 +1,17 @@
 #ifndef CEXCEPTION_H
 #define CEXCEPTION_H
 
+#define EXCAllocationEchoué 20
+#define EXC_VIOLATION_ACCES 21
+#define EXCSommetExistant 22
+#define EXCArcExistant 23
+#define EXCSommetIntrouvable 2
+#define EXCListeVide 25
+#define EXCDimensionLigne 26
+#define EXCValeurDestination 27
+#define EXCArcInExistant 28
+#define EXCArgumentNull 29
+
 class CException
 {
 	private:
