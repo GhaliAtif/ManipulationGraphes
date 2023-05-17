@@ -16,7 +16,7 @@
 inline void CSommet::SOMAjouterArcArrivant(CArc* pARCArc)
 {
 	//On vérifie que l'arc ne soit pas déjà dans la liste
-	if (SOMRechercheIndiceArcArrivant(pARCArc->ARCLireNumeroDestination()) != -1)
+	if (SOMRechercherIndiceArcArrivant(pARCArc->ARCLireNumeroDestination()) != -1)
 	{
 		CException EXCErreur(EXCArcExistant, "L'arc est deja present");
 		throw(EXCErreur);
@@ -56,7 +56,7 @@ inline void CSommet::SOMAjouterArcArrivant(CArc* pARCArc)
 ************************************************************************************/
 inline void CSommet::SOMAjouterArcPartant(CArc* pARCArc)
 {
-	if (SOMRechercheIndiceArcPartant(pARCArc->ARCLireNumeroDestination()) != -1)
+	if (SOMRechercherIndiceArcPartant(pARCArc->ARCLireNumeroDestination()) != -1)
 	{
 		CException EXCErreur(EXCArcExistant, "L'arc est deja present");
 		throw(EXCErreur);

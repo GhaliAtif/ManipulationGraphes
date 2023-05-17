@@ -43,7 +43,7 @@ public:
 	***** Sortie: (rien)											   *****
 	***** Entraine : rien											   *****
 	***********************************************************************/
-	CGraphe(int iNombreSommet);
+	CGraphe(unsigned int uiNombreSommet);
 
 	/***********************************************************************
 	***** CGraphe : Destructeur de la classe CGraphe				   *****
@@ -60,23 +60,95 @@ public:
 		return uiNombreSommets;
 	}
 
-	int GRARechercheIndiceSommet(int iNumeroSommet);
 
-	CSommet& GRALireSommet(int iIndice);
+	/*****************************************************************************************
+	***** GRARechercheIndiceSommet :Chreche si le sommet est présent dans le graphe		 *****
+	******************************************************************************************
+	***** Entree: iNombreSommet															 *****
+	***** Necessite: (rien)																 *****
+	***** Sortie: (rien)																 *****
+	***** Entraine : rien																 *****
+	******************************************************************************************/
+	unsigned int GRARechercheIndiceSommet(unsigned int iNumeroSommet);
 
+
+	/*****************************************************************************************
+	***** GRALireSommet :Chreche si le sommet est présent dans le graphe				 *****
+	******************************************************************************************
+	***** Entree: uiIndice																 *****
+	***** Necessite: (rien)																 *****
+	***** Sortie: *pSOMGRAListeSommets à l'indice donné									 *****
+	***** Entraine : rien																 *****
+	******************************************************************************************/
+	CSommet& GRALireSommet(unsigned int uiIndice);
+
+
+
+	/*****************************************************************************************
+	***** GRAAjouterSommet :Ajout d'un sommet au graphe									 *****
+	******************************************************************************************
+	***** Entree: CSommet& SOMParam														 *****
+	***** Necessite: (rien)																 *****
+	***** Sortie: (rien)																 *****
+	***** Entraine : rien																 *****
+	******************************************************************************************/
 	void GRAAjouterSommet(CSommet& SOMParam);
 
-	void GRAModifierSommet(int iNumeroSommet, CSommet& SOMParam);
 
-	void GRASupprimerSommet(int iNumeroSommet);
+	/*****************************************************************************************
+	***** GRAModifierSommet :Modifier un sommet du graphe								 *****
+	******************************************************************************************
+	***** Entree: CSommet& SOMParam	et unsigned int iNumeroSommet						 *****
+	***** Necessite: (rien)																 *****
+	***** Sortie: (rien)																 *****
+	***** Entraine : rien																 *****
+	******************************************************************************************/
+	void GRAModifierSommet(unsigned int iNumeroSommet, CSommet& SOMParam);
 
-	void GRAAjouterArc(int iNumeroSommetDepart, int iNumeroSommetArrive);
 
-	void GRAModifierSommet(int iAncienDepart, int iAncienneDestination, int iNouveauDepart, int iNouvelDestination);
+	/*****************************************************************************************
+	***** GRASupprimerSommet :Suppression d'un sommet du graphe							 *****
+	******************************************************************************************
+	***** Entree: unsigned int iNumeroSommet											 *****
+	***** Necessite: (rien)																 *****
+	***** Sortie: (rien)																 *****
+	***** Entraine : rien																 *****
+	******************************************************************************************/
+	void GRASupprimerSommet(unsigned int iNumeroSommet);
 
-	void GRASupprimerArc(int iNumeroDepart, int iNumeroDestination);
 
-	void GRAModifierArc(int iAncienSommetDepart, int iAncienSommetDestination, int iNouveauSommetDepart, int iNouveauSommetDestination);
+	/*****************************************************************************************
+	***** GRAAjouterArc :Ajout d'un Arc au graphe									 *****
+	******************************************************************************************
+	***** Entree: unsigned int iNumeroSommetDepart et unsigned int iNumeroSommetArrive	 *****
+	***** Necessite: (rien)																 *****
+	***** Sortie: (rien)																 *****
+	***** Entraine : rien																 *****
+	******************************************************************************************/
+	void GRAAjouterArc(unsigned int iNumeroSommetDepart,unsigned int iNumeroSommetArrive);
+
+
+	/*****************************************************************************************
+	***** GRASupprimerArc :Suppression d'un Arc du graphe							 *****
+	******************************************************************************************
+	***** Entree: unsigned int iNumeroDepart,unsigned int iNumeroDestination			 *****
+	***** Necessite: (rien)																 *****
+	***** Sortie: (rien)																 *****
+	***** Entraine : rien																 *****
+	******************************************************************************************/
+	void GRASupprimerArc(unsigned int iNumeroDepart,unsigned int iNumeroDestination);
+
+
+
+	/********************************************************************************************************************************************************************
+	***** GRAModifierSommet :Modifier un sommet du graphe																											*****
+	*********************************************************************************************************************************************************************
+	***** Entree: unsigned int iAncienSommetDepart,unsigned int iAncienSommetDestination,unsigned int iNouveauSommetDepart,unsigned int iNouveauSommetDestination	*****
+	***** Necessite: (rien)																																			*****
+	***** Sortie: (rien)																																			*****
+	***** Entraine : rien																																			*****
+	*********************************************************************************************************************************************************************/
+	void GRAModifierArc(unsigned int iAncienSommetDepart,unsigned int iAncienSommetDestination,unsigned int iNouveauSommetDepart,unsigned int iNouveauSommetDestination);
 
 
 

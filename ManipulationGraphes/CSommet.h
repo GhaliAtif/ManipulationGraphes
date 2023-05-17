@@ -186,10 +186,10 @@ public:
 	void SOMSupprimerArcPartant(unsigned int uiPosition);
 
 
-	int SOMRechercheIndiceArcArrivant(unsigned int uiDestination);
+	unsigned int SOMRechercherIndiceArcArrivant(unsigned int uiDestination);
 
 
-	int SOMRechercheIndiceArcPartant(unsigned int uiDestination);
+	unsigned int SOMRechercherIndiceArcPartant(unsigned int uiDestination);
 
 };
 

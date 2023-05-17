@@ -43,7 +43,7 @@ CGraphe::~CGraphe()
 }
 
 
-CGraphe::CGraphe(int iNombreSommet)
+CGraphe::CGraphe(unsigned int iNombreSommet)
 {
 	// Initialisation du nombre de sommet
 	uiNombreSommets = iNombreSommet;
@@ -52,19 +52,12 @@ CGraphe::CGraphe(int iNombreSommet)
 	pSOMGRAListeSommets = (CSommet**)malloc(uiNombreSommets * sizeof(CSommet*));
 }
 
-CSommet& CGraphe::GRALireSommet(int iIndice)
+CSommet& CGraphe::GRALireSommet(unsigned int uiIndice)
 {
-	// Vérification de l'indice en paramètre
-	if (iIndice < 0 || iIndice > int(uiNombreSommets))
-	{
-		CException EXCErreur(EXCDimensionLigne, "La dimension des lignes ne peut pas etre negative ou nulle");
-		throw(EXCErreur);
-	}
-
-	return *pSOMGRAListeSommets[iIndice];
+	return *pSOMGRAListeSommets[uiIndice];
 }
 
-int CGraphe::GRARechercheIndiceSommet(int iNumeroSommet)
+unsigned int CGraphe::GRARechercheIndiceSommet(unsigned int iNumeroSommet)
 {
 	for (unsigned int uiIndiceBoucleSommet = 0; uiIndiceBoucleSommet < uiNombreSommets; uiIndiceBoucleSommet++)
 	{
@@ -102,9 +95,9 @@ void CGraphe::GRAAjouterSommet(CSommet& SOMParam)
 }
 
 
-void CGraphe::GRAModifierSommet(int iNumeroSommet, CSommet& SOMParam)
+void CGraphe::GRAModifierSommet(unsigned int iNumeroSommet, CSommet& SOMParam)
 {
-	int iIndiceSommet = GRARechercheIndiceSommet(iNumeroSommet);
+	unsigned int iIndiceSommet = GRARechercheIndiceSommet(iNumeroSommet);
 	if (iIndiceSommet == -1)
 	{
 		CException EXCErreur(EXCSommetIntrouvable, "Le sommet ne se trouve pas dans la liste");
@@ -118,7 +111,7 @@ void CGraphe::GRAModifierSommet(int iNumeroSommet, CSommet& SOMParam)
 	pSOMGRAListeSommets[iIndiceSommet] = new CSommet(SOMParam);
 }
 
-void CGraphe::GRASupprimerSommet(int iNumeroSommet)
+void CGraphe::GRASupprimerSommet(unsigned int iNumeroSommet)
 {
 	// Si la liste est vide on lève une exception
 	if (uiNombreSommets == 0)
@@ -128,7 +121,7 @@ void CGraphe::GRASupprimerSommet(int iNumeroSommet)
 	}
 
 	//Recherche de l'indice du sommet à supprimer
-	int iIndiceSommet = GRARechercheIndiceSommet(iNumeroSommet);
+	unsigned int iIndiceSommet = GRARechercheIndiceSommet(iNumeroSommet);
 	if (iIndiceSommet == -1)
 	{
 		CException EXCErreur(EXCSommetIntrouvable, "Le sommet ne se trouve pas dans la liste");
@@ -166,12 +159,12 @@ void CGraphe::GRASupprimerSommet(int iNumeroSommet)
 }
 
 
-void CGraphe::GRAAjouterArc(int iNumeroSommetDepart, int iNumeroSommetArrive)
+void CGraphe::GRAAjouterArc(unsigned int iNumeroSommetDepart, unsigned int iNumeroSommetArrive)
 {
 	// Recherche du sommet de départ
-	int uiIndiceSommetDepart = GRARechercheIndiceSommet(iNumeroSommetDepart);
+	unsigned int uiIndiceSommetDepart = GRARechercheIndiceSommet(iNumeroSommetDepart);
 	// Recherche du sommet de l'arrive
-	int uiIndiceSommetArrive = GRARechercheIndiceSommet(iNumeroSommetArrive);
+	unsigned int uiIndiceSommetArrive = GRARechercheIndiceSommet(iNumeroSommetArrive);
 
 	// Si le sommet de départ n'est pas dans la liste on lève une exception
 	if (uiIndiceSommetDepart == -1)
@@ -187,7 +180,7 @@ void CGraphe::GRAAjouterArc(int iNumeroSommetDepart, int iNumeroSommetArrive)
 		throw(EXCErreur);
 	}
 
-	if (pSOMGRAListeSommets[uiIndiceSommetDepart]->SOMRechercheIndiceArcPartant(iNumeroSommetArrive) == -1)
+	if (pSOMGRAListeSommets[uiIndiceSommetDepart]->SOMRechercherIndiceArcPartant(iNumeroSommetArrive) == -1)
 	{
 		// Ajout d'un arc partant en arrive de iNumeroSometArrive
 		CArc* pARCArcPartant = new CArc(iNumeroSommetArrive);
@@ -204,12 +197,12 @@ void CGraphe::GRAAjouterArc(int iNumeroSommetDepart, int iNumeroSommetArrive)
 	}
 }
 
-void CGraphe::GRASupprimerArc(int iNumeroDepart, int iNumeroDestination)
+void CGraphe::GRASupprimerArc(unsigned int iNumeroDepart, unsigned int iNumeroDestination)
 {
 	// Recherche du sommet de départ
-	int uiIndiceSommetDepart = GRARechercheIndiceSommet(iNumeroDepart);
+	unsigned int uiIndiceSommetDepart = GRARechercheIndiceSommet(iNumeroDepart);
 	// Recherche du sommet de destination
-	int uiIndiceSommetDestination = GRARechercheIndiceSommet(iNumeroDestination);
+	unsigned int uiIndiceSommetDestination = GRARechercheIndiceSommet(iNumeroDestination);
 
 	// Si le sommet de départ n'est pas dans la liste on lève une exception 
 	if (uiIndiceSommetDepart == -1)
@@ -226,14 +219,14 @@ void CGraphe::GRASupprimerArc(int iNumeroDepart, int iNumeroDestination)
 	}
 
 	// Si l'arc iNumeroDepart -> iNumeroDestination n'est pas présent on lève une exception
-	if (pSOMGRAListeSommets[uiIndiceSommetDepart]->SOMRechercheIndiceArcPartant(iNumeroDestination) == -1)
+	if (pSOMGRAListeSommets[uiIndiceSommetDepart]->SOMRechercherIndiceArcPartant(iNumeroDestination) == -1)
 	{
 		CException EXCErreur(EXCArcInExistant, "L'arc est deja present");
 		throw(EXCErreur);
 	}
 
 	// Si l'arc iNumeroDestination -> iNumeroDepart n'est pas présent on lève une exception
-	if (pSOMGRAListeSommets[uiIndiceSommetDestination]->SOMRechercheIndiceArcArrivant(iNumeroDepart) == -1)
+	if (pSOMGRAListeSommets[uiIndiceSommetDestination]->SOMRechercherIndiceArcArrivant(iNumeroDepart) == -1)
 	{
 		CException EXCErreur(EXCArcInExistant, "L'arc est deja present");
 		throw(EXCErreur);
@@ -244,7 +237,7 @@ void CGraphe::GRASupprimerArc(int iNumeroDepart, int iNumeroDestination)
 	pSOMGRAListeSommets[uiIndiceSommetDestination]->SOMSupprimerArcArrivant(iNumeroDepart);
 }
 
-void CGraphe::GRAModifierArc(int iAncienDepart, int iAncienneDestination, int iNouveauDepart, int iNouvelleDestination)
+void CGraphe::GRAModifierArc(unsigned int iAncienDepart, unsigned int iAncienneDestination, unsigned int iNouveauDepart, unsigned int iNouvelleDestination)
 {
 	try
 	{
@@ -253,6 +246,8 @@ void CGraphe::GRAModifierArc(int iAncienDepart, int iAncienneDestination, int iN
 	}
 	catch (CException EXCErreur)
 	{
-		std::cout << EXCErreur.AFEAfficherErreur << std::endl;
+		EXCErreur.AFEAfficherErreur();
 	}
 }
+
+

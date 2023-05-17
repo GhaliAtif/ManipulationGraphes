@@ -6,7 +6,7 @@
 class CArc
 {
 private:
-	unsigned int uiNumeroDestination;
+	unsigned int uiARCNumeroDestination;
 
 public:
 	/**************************************************************************
@@ -39,7 +39,7 @@ public:
 	***************************************************************************/
 	unsigned int ARCLireNumeroDestination()
 	{
-		return uiNumeroDestination;
+		return uiARCNumeroDestination;
 	}
 
 	/***********************************************************************************
@@ -52,10 +52,10 @@ public:
 	***********************************************************************************/
 	void ARCModifierNumeroDestination(unsigned int uiNumero)
 	{
-		uiNumeroDestination = uiNumero;
+		uiARCNumeroDestination = uiNumero;
 	}
 
-	CArc(int iDestination);
+	CArc(unsigned int uiNumeroDestination);
 
 };
 

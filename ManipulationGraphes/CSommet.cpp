@@ -41,11 +41,11 @@ CSommet::~CSommet()
 	}
 }
 
-int CSommet::SOMRechercheIndiceArcArrivant(unsigned int uiDestination)
+unsigned int CSommet::SOMRechercherIndiceArcArrivant(unsigned int uiNumeroDestination)
 {
 	for (unsigned int uiBoucleArcArrivant = 0; uiBoucleArcArrivant < uiSOMNombreArcsArrivants; uiBoucleArcArrivant++)
 	{
-		if (pARCSOMListeArcsArrivants[uiBoucleArcArrivant]->ARCLireNumeroDestination() == uiDestination)
+		if (pARCSOMListeArcsArrivants[uiBoucleArcArrivant]->ARCLireNumeroDestination() == uiNumeroDestination)
 		{
 			return uiBoucleArcArrivant;
 		}
@@ -53,11 +53,11 @@ int CSommet::SOMRechercheIndiceArcArrivant(unsigned int uiDestination)
 	return -1;
 }
 
-int CSommet::SOMRechercheIndiceArcPartant(unsigned int uiDestination)
+unsigned int CSommet::SOMRechercherIndiceArcPartant(unsigned int uiNumeroDestination)
 {
 	for (unsigned int uiBoucleArcSortant = 0; uiBoucleArcSortant < uiSOMNombreArcsPartants; uiBoucleArcSortant++)
 	{
-		if (pARCSOMListeArcsPartants[uiBoucleArcSortant]->ARCLireNumeroDestination() == uiDestination)
+		if (pARCSOMListeArcsPartants[uiBoucleArcSortant]->ARCLireNumeroDestination() == uiNumeroDestination)
 		{
 			return uiBoucleArcSortant;
 		}

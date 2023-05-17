@@ -10,7 +10,7 @@
 **************************************************************************/
 CArc::CArc()
 {
-	uiNumeroDestination = 0;
+	uiARCNumeroDestination = 0;
 }
 
 /******************************************************
@@ -27,15 +27,9 @@ CArc::~CArc()
 }
 
 
-CArc::CArc(int iDestination)
+CArc::CArc(unsigned int uiNumeroDestination)
 {
-	// Vérification paramètre positif
-	if (iDestination < 0)
-	{
-		CException EXCErreur(EXCValeurDestination, "Valeur destination negative");
-		throw(EXCErreur);
-	}
 
 	// Initialisation de l'attribut
-	uiNumeroDestination = iDestination;
+	uiARCNumeroDestination = uiNumeroDestination;
 }
