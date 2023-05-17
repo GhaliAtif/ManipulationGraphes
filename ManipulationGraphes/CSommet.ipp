@@ -30,13 +30,13 @@ inline void CSommet::SOMAjouterArcArrivant(CArc* pARCArc)
 	}
 
 	pARCSOMListeArcsArrivants = (CArc**)realloc(pARCSOMListeArcsArrivants, sizeof(CArc*) * (uiSOMNombreArcsArrivants + 1));
-	/// Si l'allocation à réussi ajout de l'arc en fin de liste et actualisation du nombre d'arc entrant
+	// Si l'allocation à réussi ajout de l'arc en fin de liste et actualisation du nombre d'arc entrant
 	if (pARCSOMListeArcsArrivants != nullptr)
 	{
 		pARCSOMListeArcsArrivants[uiSOMNombreArcsArrivants] = new CArc(*pARCArc);
 		uiSOMNombreArcsArrivants++;
 	}
-	/// Sinon une exception est levé
+	// Sinon une exception est levé
 	else
 	{
 		CException EXCErreur(EXCAllocationEchoué, "l'allocation a échoué");

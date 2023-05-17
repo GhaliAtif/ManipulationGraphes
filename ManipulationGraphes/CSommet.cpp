@@ -65,3 +65,17 @@ unsigned int CSommet::SOMRechercherIndiceArcPartant(unsigned int uiNumeroDestina
 	return -1;
 }
 
+
+CSommet::CSommet(unsigned int uiNumeroSommet)
+{
+	if (uiNumeroSommet < 0)
+	{
+		CException EXCErreur(EXCDimensionSommet, "Numero de sommet ne peut pas etre negatif");
+		throw(EXCErreur);
+	}
+
+	uiSOMNumero = uiNumeroSommet;
+	uiSOMNombreArcsArrivants = uiSOMNombreArcsPartants = 0;
+	pARCSOMListeArcsArrivants = nullptr;
+	pARCSOMListeArcsPartants = nullptr;
+}

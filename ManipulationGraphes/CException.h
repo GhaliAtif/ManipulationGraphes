@@ -7,10 +7,11 @@
 #define EXCArcExistant 23
 #define EXCSommetIntrouvable 2
 #define EXCListeVide 25
-#define EXCDimensionLigne 26
+#define EXCDimensionSommet 26
 #define EXCValeurDestination 27
 #define EXCArcInExistant 28
 #define EXCArgumentNull 29
+#define EXCOuvertureFichier 30
 
 class CException
 {

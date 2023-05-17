@@ -191,6 +191,9 @@ public:
 
 	unsigned int SOMRechercherIndiceArcPartant(unsigned int uiDestination);
 
+
+	CSommet(unsigned int uiNumeroSommet);
+
 };
 
 #include "CSommet.ipp"
