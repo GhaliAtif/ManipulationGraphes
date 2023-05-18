@@ -2,7 +2,6 @@
 #define CSOMMET_H
 
 #include "CArc.h"
-#include "CException.h"
 
 class CSommet
 {
@@ -23,6 +22,16 @@ class CSommet
 		***** Entraine : les attributs sont initialises				 *****
 		*****************************************************************/
 		CSommet();
+
+		/*****************************************************************
+		***** CSOMMET : Constructeur de confort de la classe CSommet *****
+		******************************************************************
+		***** Entree: unsigned int uiNumero							 *****
+		***** Necessite: (rien)										 *****
+		***** Sortie: (rien)										 *****
+		***** Entraine : cree un sommet de numero "uiNumero"		 *****
+		*****************************************************************/
+		CSommet(unsigned int uiNumero);
 
 		/******************************************************
 		***** ~CSOMMET : Destructeur de la classe CSommet *****
@@ -102,22 +111,23 @@ class CSommet
 		/****************************************************************************************************
 		***** SOMAJOUTERARCARRIVANT : ajoute un arc arrivant											*****
 		*****************************************************************************************************
-		***** Entree: unsigned int uiNumeroDestination													*****
+		***** Entree: (rien)																			*****
 		***** Necessite: (rien)																			*****
 		***** Sortie: (rien)																			*****
-		***** Entraine : ajoute un arc de destination "uiNumeroDestination" a pARCSOMListeArcsArrivants	*****
+		***** Entraine : ajoute un arc de destination "uiSOMNumero" a pARCSOMListeArcsArrivants			*****
 		****************************************************************************************************/
-		void SOMAjouterArcArrivant(unsigned int uiNumeroDestination);
+		void SOMAjouterArcArrivant();
 
 		/****************************************************************************************************
 		***** SOMAJOUTERARCPARTANT : ajoute un arc partant												*****
 		*****************************************************************************************************
-		***** Entree: unsigned int uiNumeroDestination													*****
+		***** Entree: CArc & ARCParam																	*****
 		***** Necessite: (rien)																			*****
 		***** Sortie: (rien)																			*****
-		***** Entraine : ajoute un arc de destination "uiNumeroDestination" a pARCSOMListeArcsPartants	*****
+		***** Entraine : ajoute ARCParam a pARCSOMListeArcsPartants										*****
+		*****         OU (cet arc existe deja) leve une exception										*****
 		****************************************************************************************************/
-		void SOMAjouterArcPartant(unsigned int uiNumeroDestination);
+		void SOMAjouterArcPartant(CArc & ARCParam);
 
 
 		/************************************************************
@@ -133,55 +143,72 @@ class CSommet
 			uiSOMNumero = uiNumero;
 		}
 
-		/*********************************************************************************************************
-		***** SOMMODIFIERARCARRIVANT : modifie un arc arrivant												 *****
-		**********************************************************************************************************
-		***** Entree: unsigned int uiNumero, unsigned int uiPosition										 *****
-		***** Necessite: (rien)																				 *****
-		***** Sortie: (rien)																				 *****
-		***** Entraine : modifie la destination de l'arc arrivant a la position "uiPosition" avec "uiNumero" *****
-		*****         OU (liste vide) leve une exception													 *****
-		*****         OU (uiPosition >= uiSOMNombreArcsArrivants) leve une exception						 *****
-		*********************************************************************************************************/
-		void SOMModifierArcArrivant(unsigned int uiNumero, unsigned int uiPosition);
-
 		/********************************************************************************************************
 		***** SOMMODIFIERARCPARTANT : modifie un arc partant												*****
 		*********************************************************************************************************
-		***** Entree: unsigned int uiNumero, unsigned int uiPosition										*****
+		***** Entree: unsigned int uiNumero, CArc & ARCParam												*****
 		***** Necessite: (rien)																				*****
 		***** Sortie: (rien)																				*****
-		***** Entraine : modifie la destination de l'arc partant a la position "uiPosition" avec "uiNumero" *****
+		***** Entraine : modifie la destination de ARCParam avec "uiNumero"									*****
 		*****         OU (liste vide) leve une exception													*****
 		*****         OU (uiPosition >= uiSOMNombreArcsPartants) leve une exception						    *****
+		*****         OU (arc modifie a meme destination qu'un arc existant) leve une exception				*****
 		********************************************************************************************************/
-		void SOMModifierArcPartant(unsigned int uiNumero, unsigned int uiPosition);
+		void SOMModifierArcPartant(unsigned int uiNumero, CArc & ARCParam);
 
 		/************************************************************************************
 		***** SOMSUPPRIMERARCARRIVANT : supprime un arc arrivant						*****
 		*************************************************************************************
-		***** Entree: unsigned int uiPosition											*****
+		***** Entree: (rien)															*****
 		***** Necessite: (rien)															*****
 		***** Sortie: (rien)															*****
 		***** Entraine : supprime un arc a pARCSOMListeArcsArrivants					*****
 		*****         OU (liste vide) leve une exception								*****
-		*****         OU (uiPosition >= uiSOMNombreArcsArrivants) leve une exception    *****
 		************************************************************************************/
-		void SOMSupprimerArcArrivant(unsigned int uiPosition);
+		void SOMSupprimerArcArrivant();
 
 		/************************************************************************************
 		***** SOMSUPPRIMERARCPARTANT : supprime un arc partant							*****
 		*************************************************************************************
-		***** Entree: unsigned int uiPosition											*****
+		***** Entree: CArc & ARCParam													*****
 		***** Necessite: (rien)															*****
 		***** Sortie: (rien)															*****
 		***** Entraine : supprimer un arc a pARCSOMListeArcsPartants					*****
 		*****         OU (liste vide) leve une exception								*****
-		*****         OU (uiPosition >= uiSOMNombreArcsPartants) leve une exception     *****
+		*****         OU (ARCParam n'est pas dans la liste) leve une exception			*****
 		************************************************************************************/
-		void SOMSupprimerArcPartant(unsigned int uiPosition);
+		void SOMSupprimerArcPartant(CArc & ARCParam);
+
+
+
+		/* Dans le CGestionArc.h */
+
+		/************************************************************************************************************
+		***** GEARECHERCHERINDICEARCARRIVANT : lit le 1er indice de la liste avec un arc pointant sur le sommet *****
+		*************************************************************************************************************
+		***** Entree: (rien)																					*****
+		***** Necessite: (rien)																					*****
+		***** Sortie: indice de boucle																			*****
+		***** Entraine : renvoie le 1er indice de la liste avec un arc pointant sur le sommet					*****	
+		*****		  OU (cet arc n'est pas dans la liste) leve une exception									*****
+		************************************************************************************************************/
+		unsigned int GEARechercherIndiceArcArrivant();
+
+		/***********************************************************************************************************************
+		***** GEARECHERCHERINDICEARCPARTANT : lit le 1er indice de la liste avec un arc pointant sur "uiNumeroDestination" *****
+		************************************************************************************************************************
+		***** Entree: unsigned int uiNumeroDestination																	   *****
+		***** Necessite: (rien)																							   *****
+		***** Sortie: indice de boucle																					   *****
+		***** Entraine : renvoie le 1er indice de la liste avec un arc pointant sur "uiNumeroDestination"				   *****
+		*****		  OU (cet arc n'est pas dans la liste) leve une exception											   *****
+		***********************************************************************************************************************/
+		unsigned int GEARechercherIndiceArcPartant(unsigned int uiNumeroDestination);
+
+
 };
 
 #include "CSommet.ipp"
+#include "CGestionArc.ipp"
 
 #endif 

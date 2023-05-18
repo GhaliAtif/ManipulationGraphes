@@ -1,17 +1,16 @@
 /* Methodes inline de CSommet */
 
-#include "CSommet.h"
 #include <cstdlib>
 
 /****************************************************************************************************
 ***** SOMAJOUTERARCARRIVANT : ajoute un arc arrivant											*****
 *****************************************************************************************************
-***** Entree: unsigned int uiNumeroDestination													*****
+***** Entree: (rien)																			*****
 ***** Necessite: (rien)																			*****
 ***** Sortie: (rien)																			*****
-***** Entraine : ajoute un arc de destination "uiNumeroDestination" a pARCSOMListeArcsArrivants	*****
+***** Entraine : ajoute un arc de destination "uiSOMNumero" a pARCSOMListeArcsArrivants			*****
 ****************************************************************************************************/
-inline void CSommet::SOMAjouterArcArrivant(unsigned int uiNumeroDestination)
+inline void CSommet::SOMAjouterArcArrivant()
 {
 	pARCSOMListeArcsArrivants = static_cast<CArc **> (realloc(pARCSOMListeArcsArrivants, (uiSOMNombreArcsArrivants + 1) * sizeof(CArc *)));
 	uiSOMNombreArcsArrivants += 1;
@@ -19,25 +18,26 @@ inline void CSommet::SOMAjouterArcArrivant(unsigned int uiNumeroDestination)
 	/* On ajoute un element alors que la liste est vide */
 	if (uiSOMNombreArcsArrivants - 1 == 0)
 	{
-		pARCSOMListeArcsArrivants[0] = new CArc(uiNumeroDestination);
+		pARCSOMListeArcsArrivants[0] = new CArc(uiSOMNumero);
 	}
 
 	/* On ajoute un element a la fin de la liste non vide */
 	else
 	{
-		pARCSOMListeArcsArrivants[uiSOMNombreArcsArrivants - 1] = new CArc(uiNumeroDestination);
+		pARCSOMListeArcsArrivants[uiSOMNombreArcsArrivants - 1] = new CArc(uiSOMNumero);
 	}
 }
 
 /****************************************************************************************************
 ***** SOMAJOUTERARCPARTANT : ajoute un arc partant												*****
 *****************************************************************************************************
-***** Entree: unsigned int uiNumeroDestination													*****
+***** Entree: CArc & ARCParam																	*****
 ***** Necessite: (rien)																			*****
 ***** Sortie: (rien)																			*****
 ***** Entraine : ajoute un arc de destination "uiNumeroDestination" a pARCSOMListeArcsPartants	*****
+*****         OU (cet arc existe deja) leve une exception										*****
 ****************************************************************************************************/
-inline void CSommet::SOMAjouterArcPartant(unsigned int uiNumeroDestination)
+inline void CSommet::SOMAjouterArcPartant(CArc & ARCParam)
 {
 	pARCSOMListeArcsPartants = static_cast<CArc **> (realloc(pARCSOMListeArcsPartants, (uiSOMNombreArcsPartants + 1) * sizeof(CArc *)));
 	uiSOMNombreArcsPartants += 1;
@@ -48,92 +48,69 @@ inline void CSommet::SOMAjouterArcPartant(unsigned int uiNumeroDestination)
 		pARCSOMListeArcsPartants[0] = &ARCParam;
 	}
 
-	/* On ajoute un element en dehors de la liste (ie uiPosition >= uiLISTaille) */
-	else if (uiPosition >= uiSOMNombreArcsPartants)
+	/* On verifie que l'arc ne soit pas deja dans la liste */
+	else if (GEARechercherIndiceArcPartant(ARCParam.ARCLireNumeroDestination()) != -1)
 	{
-		CException EXCErreur(EXC_VIOLATION_ACCES, "uiPosition est en dehors de la liste d'arcs partants : impossible d'ajouter.");
-		throw EXCErreur;
+		CException EXCErreur(EXC_ARC_EXISTANT, "L'arc est deja present dans la liste des arcs partants : impossible d'ajouter cet arc.");
+		throw(EXCErreur);
 	}
 
 	/* On ajoute un element avec une liste non vide */
 	else
 	{
-		for (unsigned int uiBoucle = uiSOMNombreArcsPartants - 1; uiBoucle > uiPosition; uiBoucle--)
-		{
-			pARCSOMListeArcsPartants[uiBoucle] = pARCSOMListeArcsPartants[uiBoucle - 1];
-		}
-		pARCSOMListeArcsPartants[uiPosition] = &ARCParam;
-
+		pARCSOMListeArcsPartants[uiSOMNombreArcsPartants - 1] = &ARCParam;
 	}
 }
 
-/*********************************************************************************************************
-***** SOMMODIFIERARCARRIVANT : modifie un arc arrivant												 *****
-**********************************************************************************************************
-***** Entree: unsigned int uiNumero, unsigned int uiPosition										 *****
-***** Necessite: (rien)																				 *****
-***** Sortie: (rien)																				 *****
-***** Entraine : modifie la destination de l'arc arrivant a la position "uiPosition" avec "uiNumero" *****
-*****         OU (liste vide) leve une exception													 *****
-*****         OU (uiPosition >= uiSOMNombreArcsArrivants) leve une exception						 *****
-*********************************************************************************************************/
-inline void CSommet::SOMModifierArcArrivant(unsigned int uiNumero, unsigned int uiPosition)
-{
-	/* On modifie alors que la liste est vide */
-	if (uiSOMNombreArcsArrivants == 0)
-	{
-		CException EXCErreur(EXC_VIOLATION_ACCES, "La liste d'arcs arrivants est deja vide : impossible de supprimer.");
-	}
-
-	/* On modifie en dehors de la liste */
-	if (uiPosition >= uiSOMNombreArcsArrivants)
-	{
-		CException EXCErreur(EXC_VIOLATION_ACCES, "uiPosition est en dehors de la liste d'arcs arrivants : impossible de supprimer.");
-	}
-
-	/* Cas normal */
-	pARCSOMListeArcsArrivants[uiPosition]->ARCModifierNumeroDestination(uiNumero);
-}
 
 /********************************************************************************************************
 ***** SOMMODIFIERARCPARTANT : modifie un arc partant												*****
 *********************************************************************************************************
-***** Entree: unsigned int uiNumero, unsigned int uiPosition										*****
+***** Entree: unsigned int uiNumero, CArc & ARCParam												*****
 ***** Necessite: (rien)																				*****
 ***** Sortie: (rien)																				*****
 ***** Entraine : modifie la destination de l'arc partant a la position "uiPosition" avec "uiNumero" *****
 *****         OU (liste vide) leve une exception													*****
-*****         OU (uiPosition >= uiSOMNombreArcsPartants) leve une exception						    *****
+*****         OU (l'arc n'est pas dans la liste) leve une exception								    *****
+*****         OU (arc modifie a meme destination qu'un arc existant) leve une exception				*****
 ********************************************************************************************************/
-inline void CSommet::SOMModifierArcPartant(unsigned int uiNumero, unsigned int uiPosition)
+inline void CSommet::SOMModifierArcPartant(unsigned int uiNumero, CArc & ARCParam)
 {
 	/* On modifie alors que la liste est vide */
 	if (uiSOMNombreArcsPartants == 0)
 	{
-		CException EXCErreur(EXC_VIOLATION_ACCES, "La liste d'arcs partants est deja vide : impossible de supprimer.");
+		CException EXCErreur(EXC_VIOLATION_ACCES, "La liste d'arcs partants est deja vide : impossible de modifier.");
 	}
 
-	/* On modifie en dehors de la liste */
-	if (uiPosition >= uiSOMNombreArcsPartants)
+	/* l'arc n'est pas dans la liste */
+	unsigned int uiIndiceArcPartant = GEARechercherIndiceArcPartant(ARCParam.ARCLireNumeroDestination());
+	if (uiIndiceArcPartant == -1)
 	{
-		CException EXCErreur(EXC_VIOLATION_ACCES, "uiPosition est en dehors de la liste d'arcs partants : impossible de supprimer.");
+		CException EXCErreur(EXC_VIOLATION_ACCES, "ARCParam n'est pas dans la liste d'arcs partants : impossible de modifier.");
 	}
+
+	/* On modifie l'arc en un arc qui existe deja  */
+	if (GEARechercherIndiceArcPartant(uiNumero) != -1)
+	{
+		CException EXCErreur(EXC_ARC_EXISTANT, "l'arc modifie devient un arc qui existe deja : impossible de modifier.");
+		throw EXCErreur;
+	}
+
 
 	/* Cas normal */
-	pARCSOMListeArcsPartants[uiPosition]->ARCModifierNumeroDestination(uiNumero);
+	pARCSOMListeArcsPartants[uiIndiceArcPartant]->ARCModifierNumeroDestination(uiNumero);
 }
 
 /************************************************************************************
 ***** SOMSUPPRIMERARCARRIVANT : supprime un arc arrivant						*****
 *************************************************************************************
-***** Entree: CArc & ARCParam, unsigned int uiPosition							*****
+***** Entree: (rien)															*****
 ***** Necessite: (rien)															*****
 ***** Sortie: (rien)															*****
-***** Entraine : supprime un arc a pARCSOMListeArcsArrivants					*****
+***** Entraine : supprime le 1er arc de pARCSOMListeArcsArrivants				*****
 *****         OU (liste vide) leve une exception								*****
-*****         OU (uiPosition >= uiSOMNombreArcsArrivants) leve une exception    *****
 ************************************************************************************/
-inline void CSommet::SOMSupprimerArcArrivant(unsigned int uiPosition)
+inline void CSommet::SOMSupprimerArcArrivant()
 {
 	/* Cas de la liste vide : rien a supprimer */
 	if (uiSOMNombreArcsArrivants == 0)
@@ -142,15 +119,8 @@ inline void CSommet::SOMSupprimerArcArrivant(unsigned int uiPosition)
 		throw EXCErreur;
 	}
 
-	/* On supprime en dehors de la liste */
-	if (uiPosition >= uiSOMNombreArcsArrivants)
-	{
-		CException EXCErreur(EXC_VIOLATION_ACCES, "uiPosition est en dehors de la liste d'arcs arrivants : impossible de supprimer.");
-		throw EXCErreur;
-	}
-
 	/* Cas normal : on decale tous les elements a droite de celui a supprimer a gauche  */
-	for (unsigned int uiBoucle = uiPosition; uiBoucle < uiSOMNombreArcsArrivants - 1; uiBoucle++)
+	for (unsigned int uiBoucle = 0; uiBoucle < uiSOMNombreArcsArrivants - 1; uiBoucle++)
 	{
 		pARCSOMListeArcsArrivants[uiBoucle] = pARCSOMListeArcsArrivants[uiBoucle + 1];
 	}
@@ -162,14 +132,14 @@ inline void CSommet::SOMSupprimerArcArrivant(unsigned int uiPosition)
 /************************************************************************************
 ***** SOMSUPPRIMERARCPARTANT : supprime un arc partant							*****
 *************************************************************************************
-***** Entree: unsigned int uiPosition											*****
+***** Entree: CArc & ARCParam													*****
 ***** Necessite: (rien)															*****
 ***** Sortie: (rien)															*****
-***** Entraine : supprimer un arc a pARCSOMListeArcsPartants					*****
+***** Entraine : supprime ARCParam dans pARCSOMListeArcsPartants				*****
 *****         OU (liste vide) leve une exception								*****
-*****         OU (uiPosition >= uiSOMNombreArcsPartants) leve une exception     *****
+*****         OU (ARCParam n'est pas dans la liste) leve une exception			*****
 ************************************************************************************/
-inline void CSommet::SOMSupprimerArcPartant(unsigned int uiPosition)
+inline void CSommet::SOMSupprimerArcPartant(CArc & ARCParam)
 {
 	/* Cas de la liste vide : rien a supprimer */
 	if (uiSOMNombreArcsPartants == 0)
@@ -178,15 +148,16 @@ inline void CSommet::SOMSupprimerArcPartant(unsigned int uiPosition)
 		throw EXCErreur;
 	}
 
-	/* On supprime en dehors de la liste */
-	if (uiPosition >= uiSOMNombreArcsPartants)
+	/* On supprime un arc hors de la liste */
+	unsigned int uiIndiceArcPartant = GEARechercherIndiceArcPartant(ARCParam.ARCLireNumeroDestination());
+	if (uiIndiceArcPartant == -1)
 	{
-		CException EXCErreur(EXC_VIOLATION_ACCES, "uiPosition est en dehors de la liste d'arcs partants : impossible de supprimer.");
+		CException EXCErreur(EXC_VIOLATION_ACCES, "l'arc a supprimer n'est pas dans la liste : impossible de supprimer.");
 		throw EXCErreur;
 	}
 
 	/* Cas normal : on decale tous les elements a droite de celui a supprimer a gauche  */
-	for (unsigned int uiBoucle = uiPosition; uiBoucle < uiSOMNombreArcsPartants - 1; uiBoucle++)
+	for (unsigned int uiBoucle = uiIndiceArcPartant; uiBoucle < uiSOMNombreArcsPartants - 1; uiBoucle++)
 	{
 		pARCSOMListeArcsPartants[uiBoucle] = pARCSOMListeArcsPartants[uiBoucle + 1];
 	}
@@ -194,3 +165,5 @@ inline void CSommet::SOMSupprimerArcPartant(unsigned int uiPosition)
 
 	pARCSOMListeArcsPartants = static_cast<CArc **> (realloc(pARCSOMListeArcsPartants, uiSOMNombreArcsPartants * sizeof(CArc *)));
 }
+
+
