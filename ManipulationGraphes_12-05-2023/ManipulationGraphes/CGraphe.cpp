@@ -1,5 +1,7 @@
-#include "CGraphe.h"
 #include <iostream>
+
+#include "CGraphe.h"
+#include "CFichierGraphe.h"
 
 using namespace std;
 
@@ -34,6 +36,19 @@ CGraphe::CGraphe(CGraphe & GRAParam)
 	{
 		pSOMGRAListeSommets[uiSommet] = GRAParam.pSOMGRAListeSommets[uiSommet];
 	}
+}
+
+/**************************************************************************
+***** CGRAPHE : convertit un CFichierGraphe en CGraphe				  *****
+***************************************************************************
+***** Entree: CFichierGraphe & FIGParam								  *****
+***** Necessite: (rien)												  *****
+***** Sortie: (rien)												  *****
+***** Entraine : cree un graphe a partir d'un fichier texte			  *****
+**************************************************************************/
+CGraphe::CGraphe(CFichierGraphe & FIGParam)
+{
+
 }
 
 /******************************************************

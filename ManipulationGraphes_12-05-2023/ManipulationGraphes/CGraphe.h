@@ -31,6 +31,16 @@ class CGraphe
 		**************************************************************************/
 		CGraphe(CGraphe & GRAParam);
 
+		/**************************************************************************
+		***** CGRAPHE : convertit un CFichierGraphe en CGraphe				  *****
+		***************************************************************************
+		***** Entree: CFichierGraphe & FIGParam								  *****
+		***** Necessite: (rien)												  *****
+		***** Sortie: (rien)												  *****
+		***** Entraine : cree un graphe a partir d'un fichier texte			  *****
+		**************************************************************************/
+		CGraphe(CFichierGraphe & FIGParam);
+
 		/******************************************************
 		***** ~CGRAPHE : Destructeur de la classe CGraphe *****
 		*******************************************************
