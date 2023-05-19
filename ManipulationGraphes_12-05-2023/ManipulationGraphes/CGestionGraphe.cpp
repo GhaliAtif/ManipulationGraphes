@@ -67,36 +67,43 @@ void CGraphe::GEGInverserGraphe()
 		uiNombreArcsArrivants = pSOMGRAListeSommets[uiSommet]->SOMLireNombreArcsArrivants();
 		uiNombreArcsPartants = pSOMGRAListeSommets[uiSommet]->SOMLireNombreArcsPartants();
 
-		/* On parcourt toute la liste des arcs partants du sommet */
-		for (unsigned int uiArc = 0; uiArc < uiNombreArcsPartants; uiArc++)
+		/* Si le sommet possede des arcs partants, on les modifie */
+		if (uiNombreArcsPartants != 0)
 		{
-			/* On recupere le numero de la destination */
-			uiDestination = pSOMGRAListeSommets[uiSommet]->SOMLireListeArcsPartants()[uiArc]->ARCLireNumeroDestination();
+			for (unsigned int uiArc = 0; uiArc < uiNombreArcsPartants; uiArc++)
+			{
+				/* On recupere le numero de la destination */
+				uiDestination = pSOMGRAListeSommets[uiSommet]->SOMLireListeArcsPartants()[uiArc]->ARCLireNumeroDestination();
 
-			/* on recupere l'indice de l'arc associe a "uiDestination" */
-			uiIndiceArcPartant = pSOMGRAListeSommets[uiSommet]->GEARechercherIndiceArcPartant(uiDestination);
+				/* on recupere l'indice de l'arc associe a "uiDestination" */
+				uiIndiceArcPartant = pSOMGRAListeSommets[uiSommet]->GEARechercherIndiceArcPartant(uiDestination);
 
-			/* on supprime cet arc */
-			pSOMGRAListeSommets[uiSommet]->SOMSupprimerArcPartant(*pSOMGRAListeSommets[uiSommet]->SOMLireListeArcsPartants()[uiIndiceArcPartant]);
+				/* on supprime cet arc */
+				pSOMGRAListeSommets[uiSommet]->SOMSupprimerArcPartant(*pSOMGRAListeSommets[uiSommet]->SOMLireListeArcsPartants()[uiIndiceArcPartant]);
 
-			/* On ajoute le numero du sommet courant dans sa liste des arcs arrivants */
-			pSOMGRAListeSommets[uiSommet]->SOMAjouterArcArrivant();
+				/* On ajoute le numero du sommet courant dans sa liste des arcs arrivants */
+				pSOMGRAListeSommets[uiSommet]->SOMAjouterArcArrivant();
+			}
 		}
 
-		/* On parcourt la liste des arcs arrivants du sommet */
-		for (unsigned int uiArc = 0; uiArc < uiNombreArcsArrivants; uiArc++)
+			/* Si le sommet possede des arcs arrivants, on les modifie */
+		if (uiNombreArcsArrivants != 0)
 		{
-			/* On cree un arc vers la source de l'arc precedemment supprime */
-			uiSource = GEGChercherSourceArcArrivant(*pSOMGRAListeSommets[uiSommet]->SOMLireListeArcsArrivants()[uiArc]);
-			pSOMGRAListeSommets[uiSommet]->SOMAjouterArcPartant(*(new CArc(uiSource)));
+			for (unsigned int uiArc = 0; uiArc < uiNombreArcsArrivants; uiArc++)
+			{
+				/* On cree un arc vers la source de l'arc precedemment supprime */
+				uiSource = GEGChercherSourceArcArrivant(*pSOMGRAListeSommets[uiSommet]);
+				pSOMGRAListeSommets[uiSommet]->SOMAjouterArcPartant(*(new CArc(uiSource)));
 
-			/* on supprime un des arcs de destination le sommet courant */
-			pSOMGRAListeSommets[uiSommet]->SOMSupprimerArcArrivant();
+				/* on supprime un des arcs de destination le sommet courant */
+				pSOMGRAListeSommets[uiSommet]->SOMSupprimerArcArrivant();
+			}
 		}
-
 	}
-	
-	
+
+
+
+
 }
 
 

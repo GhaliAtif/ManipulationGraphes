@@ -14,21 +14,21 @@
 ***********************************************************************/
 CException::CException()
 {
-	uiEXCCodeErreurs = 0;
+	iEXCCodeErreurs = 0;
 	cEXCErreurs[500] = NULL;
 }
 
 /*********************************************************************
 ***** CEXCEPTION : Constructeur de confort						 *****
 **********************************************************************
-***** Entree: unsigned int uiArg, const char cArg[500]			 *****
+***** Entree: int iArg, const char cArg[500]					 *****
 ***** Necessite: (rien)											 *****
 ***** Sortie: (rien)											 *****
 ***** Entraine : initialise l'objet avec les parametres d'entree *****
 *********************************************************************/
-CException::CException(unsigned int uiEXCArg, const char cEXCArg[500])
+CException::CException(int iArg, const char cEXCArg[500])
 {
-	uiEXCCodeErreurs = uiEXCArg;
+	iEXCCodeErreurs = iArg;
 	strcpy_s(cEXCErreurs, 500, cEXCArg);
 }
 

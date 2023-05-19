@@ -11,17 +11,18 @@
 ************************************************************************************************************/
 inline unsigned int CSommet::GEARechercherIndiceArcArrivant()
 {
-	/* On cherche l'arc de destination "uiSOMNumero" dans la liste */
+	/* On cherche l'arc de destination "uiSOMNumero" dans la liste des arcs arrivants */
 	for (unsigned int uiBoucleArcArrivant = 0; uiBoucleArcArrivant < uiSOMNombreArcsArrivants; uiBoucleArcArrivant++)
 	{
+		/* Si l'un des arcs de la liste correspond, on retourne son indice dans la liste */
 		if (pARCSOMListeArcsArrivants[uiBoucleArcArrivant]->ARCLireNumeroDestination() == uiSOMNumero)
 		{
 			return uiBoucleArcArrivant;
 		}
 	}
 
-	/* Si l'arc n'a pas ete trouve, on retourne -1 */
-	return -1;
+	/* Sinon, on retourne EXC_ARC_INEXISTANT */
+	return EXC_ARC_INEXISTANT;
 }
 
 /***********************************************************************************************************************
@@ -34,16 +35,18 @@ inline unsigned int CSommet::GEARechercherIndiceArcArrivant()
 ***********************************************************************************************************************/
 inline unsigned int CSommet::GEARechercherIndiceArcPartant(unsigned int uiNumeroDestination)
 {
-	/* On cherche l'arc de destination "uiNumeroDestination" dans la liste */
-	for (unsigned int uiBoucleArcPartant = 0; uiBoucleArcPartant < uiSOMNombreArcsPartants - 1; uiBoucleArcPartant++)
+	/* On cherche l'arc de destination "uiNumeroDestination" dans la liste des arcs partants */
+	for (unsigned int uiBoucleArcPartant = 0; uiBoucleArcPartant < uiSOMNombreArcsPartants; uiBoucleArcPartant++)
 	{
+		/* Si l'un des arcs de la liste correspond, on retourne son indice dans la liste */
 		if (pARCSOMListeArcsPartants[uiBoucleArcPartant]->ARCLireNumeroDestination() == uiNumeroDestination)
 		{
 			return uiBoucleArcPartant;
 		}
 	}
 
-	/* Si l'arc n'a pas ete trouve, on retourne -1 */
-	return -1;
+	/* Sinon, on retourne EXC_ARC_INEXISTANT */
+	return EXC_ARC_INEXISTANT;
+
 }
 

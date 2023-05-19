@@ -3,29 +3,32 @@
 #include <iostream>
 using namespace std;
 
-/***********************************************************************************
-***** GEGCHERCHERSOURCEARCARRIVANT : lit le sommet de depart d'un arc arrivant *****
-************************************************************************************
-***** Entree: (rien)														   *****
-***** Necessite: (rien)														   *****
-***** Sortie: numero de sommet												   *****
-***** Entraine : renvoie le numero du sommet de depart de l'arc				   *****
-*****		  OU (arc n'existe pas dans le graphe) leve une exception		   *****
-***********************************************************************************/
-inline unsigned int CGraphe::GEGChercherSourceArcArrivant(CArc & ARCParam)
+/****************************************************************************************
+***** GEGCHERCHERSOURCEARCARRIVANT : cherche le sommet de depart d'un arc arrivant	*****
+*****************************************************************************************
+***** Entree: CSommet & SOMParam													*****
+***** Necessite: (rien)																*****
+***** Sortie: numero de sommet qui possede un arc partant sur SOMParam				*****
+***** Entraine : renvoie ce numero de sommet										*****
+****************************************************************************************/
+inline unsigned int CGraphe::GEGChercherSourceArcArrivant(CSommet & SOMParam)
 {
 	for (unsigned int uiSommet = 0; uiSommet < uiGRANombreSommets; uiSommet++)
 	{
-		/* pour un sommet donne, on parcourt toute la liste des arcs partants */
+		/* Pour un sommet donne, on parcourt la liste de ses arcs partants */
 		for (unsigned int uiArc = 0; uiArc < pSOMGRAListeSommets[uiSommet]->SOMLireNombreArcsPartants(); uiArc++)
-			if (pSOMGRAListeSommets[uiSommet]->SOMLireListeArcsPartants()[uiArc]->ARCLireNumeroDestination() == ARCParam.ARCLireNumeroDestination())
+
+			/* Si ce sommet possede un arc partant sur le meme sommet que ARCParam, 
+			alors ce sommet possede un arc arrivant sur la destination de ARCParam.
+			Donc il est un sommet source d'un des arcs arrivant sur la destination de ARCParam. */
+			if (pSOMGRAListeSommets[uiSommet]->GEARechercherIndiceArcPartant(SOMParam.SOMLireNumero()) != EXC_ARC_INEXISTANT)
 			{
 				return pSOMGRAListeSommets[uiSommet]->SOMLireNumero();
 			}
 	}
 
-	CException EXCErreur(EXC_ARC_NON_EXISTANT, "l'arc en parametre n'existe pas dans le graphe.");
-	throw EXCErreur;
+	/* Sinon, on retourne EXC_ARC_INEXISTANT */
+	return EXC_ARC_INEXISTANT;
 }
 
 /***************************************************************************************************
@@ -39,12 +42,16 @@ inline unsigned int CGraphe::GEGChercherSourceArcArrivant(CArc & ARCParam)
 ***************************************************************************************************/
 inline unsigned int CGraphe::GEGRechercherIndiceSommet(unsigned int uiNumero)
 {
-	for (unsigned int uiIndiceBoucleSommet = 0; uiIndiceBoucleSommet < uiGRANombreSommets - 1; uiIndiceBoucleSommet++)
+	/* On cherche "uiNumero" dans la liste des sommets */
+	for (unsigned int uiIndiceBoucleSommet = 0; uiIndiceBoucleSommet < uiGRANombreSommets; uiIndiceBoucleSommet++)
 	{
-		if (GRALireListeSommets()[uiIndiceBoucleSommet]->SOMLireNumero() == uiNumero) //pb avec uiIndiceBoucleSommet????
+		/* Si un des sommets de la liste correspond, on retourne son indice dans la liste */
+		if (GRALireListeSommets()[uiIndiceBoucleSommet]->SOMLireNumero() == uiNumero)
 		{
 			return uiIndiceBoucleSommet;
 		}
 	}
-	return -1;
+
+	/* Sinon, on retourne EXC_SOMMET_INEXISTANT */
+	return EXC_SOMMET_INEXISTANT;
 }

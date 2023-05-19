@@ -2,6 +2,7 @@
 #define CGRAPHE_H
 
 #include "CSommet.h"
+#include "CFichierGraphe.h"
 
 class CGraphe
 {
@@ -175,15 +176,15 @@ class CGraphe
 		******************************************************/
 		void GEGInverserGraphe();
 
-		/***********************************************************************************
-		***** GEGCHERCHERSOURCEARCARRIVANT : lit le sommet de depart d'un arc arrivant *****
-		************************************************************************************
-		***** Entree: (rien)														   *****
-		***** Necessite: (rien)														   *****
-		***** Sortie: numero de sommet												   *****
-		***** Entraine : renvoie le numero du sommet de depart de l'arc				   *****
-		***********************************************************************************/
-		unsigned int GEGChercherSourceArcArrivant(CArc & ARCParam);
+		/****************************************************************************************
+		***** GEGCHERCHERSOURCEARCARRIVANT : cherche le sommet de depart d'un arc arrivant	*****
+		*****************************************************************************************
+		***** Entree: CSommet & SOMParam													*****
+		***** Necessite: (rien)																*****
+		***** Sortie: numero de sommet qui possede un arc partant sur SOMParam				*****
+		***** Entraine : renvoie ce numero de sommet										*****
+		****************************************************************************************/
+		unsigned int GEGChercherSourceArcArrivant(CSommet & SOMParam);
 
 		/***************************************************************************************************
 		***** GEGRECHERCHERINDICESOMMET : lit le 1er indice de la liste ayant pour sommet "uiPosition" *****

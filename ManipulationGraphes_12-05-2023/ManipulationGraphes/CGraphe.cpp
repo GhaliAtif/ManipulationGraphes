@@ -63,6 +63,6 @@ CGraphe::~CGraphe()
 {
 	if (pSOMGRAListeSommets != nullptr)
 	{
-		free(pSOMGRAListeSommets);
+		delete[] pSOMGRAListeSommets;
 	}
 }

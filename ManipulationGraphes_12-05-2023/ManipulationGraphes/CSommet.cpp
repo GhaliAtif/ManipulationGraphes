@@ -46,19 +46,19 @@ CSommet::CSommet(unsigned int uiNumero)
 ******************************************************/
 CSommet::~CSommet()
 {
-	for (unsigned int uiArc = 0; uiArc < uiSOMNombreArcsArrivants; uiArc++)
-	{
-		delete pARCSOMListeArcsArrivants[uiArc];
-	}
-
 	if (pARCSOMListeArcsArrivants != nullptr)
 	{
-		free(pARCSOMListeArcsArrivants);
+		for (unsigned int uiArc = 0; uiArc < uiSOMNombreArcsArrivants; uiArc++)
+		{
+			delete pARCSOMListeArcsArrivants[uiArc];
+		}
+
+		delete[] pARCSOMListeArcsArrivants;
 	}
 
 	if (pARCSOMListeArcsPartants != nullptr)
 	{
-		free(pARCSOMListeArcsPartants);
+		delete[] pARCSOMListeArcsPartants;
 	}
 }
 

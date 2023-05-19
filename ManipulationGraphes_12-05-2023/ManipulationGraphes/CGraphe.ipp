@@ -15,27 +15,34 @@ using namespace std;
 ******************************************************************************/
 inline void CGraphe::GRAAjouterSommet(CSommet & SOMParam)
 {
-	pSOMGRAListeSommets = static_cast<CSommet **> (realloc(pSOMGRAListeSommets, (uiGRANombreSommets + 1) * sizeof(CSommet *)));
-	uiGRANombreSommets += 1;
-
-	/* On ajoute un element alors que la liste est vide */
-	if (uiGRANombreSommets - 1 == 0)
-	{
-		pSOMGRAListeSommets[0] = &SOMParam;
-	}
-
 	/* Le sommet existe deja */
-	else if (GEGRechercherIndiceSommet(SOMParam.SOMLireNumero()) != -1)
+	if (GEGRechercherIndiceSommet(SOMParam.SOMLireNumero()) != EXC_SOMMET_INEXISTANT)
 	{
 		CException EXCErreur(EXC_SOMMET_EXISTANT, "Le sommet existe deja : impossible d'ajouter ce sommet.");
 		throw(EXCErreur);
 	}
 
-	/* On ajoute le sommet */
-	else
+	CSommet** NouveauxSommets = new CSommet*[uiGRANombreSommets + 1];
+
+	/* On copie les sommets existant dans NouveauxSommets */
+	for (unsigned int i = 0; i < uiGRANombreSommets; i++)
 	{
-		pSOMGRAListeSommets[uiGRANombreSommets - 1] = &SOMParam;
+		NouveauxSommets[i] = pSOMGRAListeSommets[i];
 	}
+
+	/* On ajoute SOMParam a la liste */
+	NouveauxSommets[uiGRANombreSommets] = &SOMParam;
+
+	/* On desalloue la memoire pour l'ancienne liste de sommets */
+	delete[] pSOMGRAListeSommets;
+
+	/* on fait pointer pSOMGRAListeSommets sur la nouvelle liste */
+	pSOMGRAListeSommets = NouveauxSommets;
+
+	uiGRANombreSommets += 1;
+
+	/* On ajoute le sommet */
+	pSOMGRAListeSommets[uiGRANombreSommets - 1] = &SOMParam;
 }
 
 /******************************************************************************************
@@ -59,23 +66,45 @@ inline void CGraphe::GRAModifierSommet(unsigned int uiNumero, CSommet & SOMParam
 	}
 
 	/* le sommet existe deja */
-	if (GEGRechercherIndiceSommet(uiNumero) != -1)
+	if (GEGRechercherIndiceSommet(uiNumero) != EXC_SOMMET_INEXISTANT)
 	{
 		CException EXCErreur(EXC_SOMMET_EXISTANT, "Le sommet existe deja : impossible de modifier.");
 		throw EXCErreur;
 
 	}
 
-	/* le sommet n'existe pas */
+	/* le sommet en parametre n'existe pas */
 	unsigned int uiIndiceSommet = GEGRechercherIndiceSommet(SOMParam.SOMLireNumero());
-	if (uiIndiceSommet == -1)
+
+	if (uiIndiceSommet == EXC_SOMMET_INEXISTANT)
 	{
-		CException EXCErreur(EXC_SOMMET_INEXISTANT, "Le sommet n'existe pas : impossible de modifier.");
-		throw(EXCErreur);
+		CException EXCErreur(EXC_SOMMET_INEXISTANT, "Le sommet en parametre n'existe pas : impossible de modifier.");
+		throw EXCErreur;
 	}
 
-	/* Cas normal */
-	pSOMGRAListeSommets[uiIndiceSommet]->SOMModifierNumero(uiNumero);
+	/* Cas normal : on change le numero de SOMParam et des potentiels arcs qui pointaient sur SOMParam en "uiNumero" */
+	unsigned int uiSourceArcArrivant;
+	unsigned int uiIndiceSource;
+	unsigned int uiIndiceArcPartantPointantSOMParam;
+
+	/* SOMParam possede des arcs arrivants */
+	for (unsigned int uiArcArrivant = 0; uiArcArrivant < SOMParam.SOMLireNombreArcsArrivants(); uiArcArrivant++)
+	{
+		/* On cherche le sommet source d'un des arcs arrivants sur SOMParam */
+		uiSourceArcArrivant = GEGChercherSourceArcArrivant(SOMParam);
+
+		/* On cherche l'indice du sommet source, de cet arc arrivant, dans la liste des sommets du graphe */
+		uiIndiceSource = GEGRechercherIndiceSommet(uiSourceArcArrivant);
+
+		/* Dans ce sommet source, on cherche l'indice de l'arc partant pointant sur SOMParam */
+		uiIndiceArcPartantPointantSOMParam = pSOMGRAListeSommets[uiIndiceSource]->GEARechercherIndiceArcPartant(SOMParam.SOMLireNumero());
+
+		/* Dans ce sommet source, on change la destination de cet arc partant par "uiNumero" */
+		pSOMGRAListeSommets[uiIndiceSource]->SOMLireListeArcsPartants()[uiIndiceArcPartantPointantSOMParam]->ARCModifierNumeroDestination(uiNumero);
+	}
+
+	/* On change le numero de SOMParam en "uiNumero" */
+	SOMParam.SOMModifierNumero(uiNumero);
 }
 
 /************************************************************************************
@@ -99,13 +128,16 @@ inline void CGraphe::GRASupprimerSommet(CSommet & SOMParam)
 
 	/* le sommet n'existe pas */
 	unsigned int uiIndiceSommet = GEGRechercherIndiceSommet(SOMParam.SOMLireNumero());
-	if (uiIndiceSommet == -1)
+	if (uiIndiceSommet == EXC_SOMMET_INEXISTANT)
 	{
 		CException EXCErreur(EXC_SOMMET_INEXISTANT, "Le sommet n'existe pas : impossible de modifier.");
 		throw(EXCErreur);
 	}
 
-	/* Cas normal : on decale tous les elements a droite de celui a supprimer a gauche  */
+	/* On desalloue la memoire du sommet supprime */
+	delete pSOMGRAListeSommets[uiIndiceSommet];
+
+	/* Cas normal : on decale tous les elements, a droite de celui a supprimer, a gauche  */
 	for (unsigned int uiBoucle = uiIndiceSommet; uiBoucle < uiGRANombreSommets - 1; uiBoucle++)
 	{
 		pSOMGRAListeSommets[uiBoucle] = pSOMGRAListeSommets[uiBoucle + 1];
@@ -133,39 +165,32 @@ inline void CGraphe::GRAAjouterArc(unsigned int uiDepart, CArc & ARCParam)
 	// Recherche du sommet d'arrivee
 	unsigned int uiIndiceSommetArrivee = GEGRechercherIndiceSommet(ARCParam.ARCLireNumeroDestination());
 
+	/* Recherche de l'arc partant */
+	unsigned int uiIndiceArcPartant = 0;
+
 	/* Un des 2 sommets n'existe pas */
-	if ((uiIndiceSommetDepart == -1) || (uiIndiceSommetArrivee == -1))
+	if ((uiIndiceSommetDepart == EXC_SOMMET_INEXISTANT) || (uiIndiceSommetArrivee == EXC_SOMMET_INEXISTANT))
 	{
 		CException EXCErreur(EXC_SOMMET_INEXISTANT, "Un des 2 sommets n'existe pas : impossible d'ajouter cet arc.");
 		throw(EXCErreur);
 	}
 
-	/* Cas ou l'arc a ajouter n'existe pas encore */
-	cout << "Il y a " << uiGRANombreSommets << " sommets dans le graphe." << endl;
-	cout << "Or uiIndiceSommetDepart vaut " << uiIndiceSommetDepart << " d'ou :" << endl;
-
-	cout << "Le numero du sommet pSOMGRAListeSommets[uiIndiceSommetDepart] est " << pSOMGRAListeSommets[uiIndiceSommetDepart]->SOMLireNumero() << ", donc ce n'est pas ca le pb !" << endl;
-	cout << "ARCParam.ARCLireNumeroDestination() vaut " << ARCParam.ARCLireNumeroDestination() << ", donc ca n'est ps le pb !" << endl;
-
-	cout << "LE nombre d'arcs partants est " << pSOMGRAListeSommets[uiIndiceSommetDepart]->SOMLireNombreArcsPartants() << ", donc ca n'est pas le pb!" << endl;
-	cout << "LE nombre d'arcs arrivants est " << pSOMGRAListeSommets[uiIndiceSommetDepart]->SOMLireNombreArcsArrivants() << ", donc ca n'est pas le pb!" << endl;
-
-	cout << "test: faisons pSOMGRAListeSommets[uiIndiceSommetDepart]->GEARechercherIndiceArcPartant(ARCParam.ARCLireNumeroDestination()). On obtient alors : " << pSOMGRAListeSommets[uiIndiceSommetDepart]->GEARechercherIndiceArcPartant(ARCParam.ARCLireNumeroDestination()) << endl;
-
-	if (pSOMGRAListeSommets[uiIndiceSommetDepart]->GEARechercherIndiceArcPartant(ARCParam.ARCLireNumeroDestination()) == -1)
-	{
-		cout << "On a passe le if " << endl;
-		// Ajout d'un arc partant pour le sommet "uiNumeroSommetDepart"
-		pSOMGRAListeSommets[uiIndiceSommetDepart]->SOMAjouterArcPartant(ARCParam);
-
-		// Ajout d'un arc arrivant pour le sommet "uiNumeroSommetArrivee"
-		pSOMGRAListeSommets[uiIndiceSommetArrivee]->SOMAjouterArcArrivant();
-	}
-	else
+	/* L'arc existe deja */
+	uiIndiceArcPartant = pSOMGRAListeSommets[uiIndiceSommetDepart]->GEARechercherIndiceArcPartant(ARCParam.ARCLireNumeroDestination());
+	if (uiIndiceArcPartant != EXC_ARC_INEXISTANT)
 	{
 		CException EXCErreur(EXC_ARC_EXISTANT, "L'arc existe deja : impossible de l'ajouter.");
 		throw(EXCErreur);
 	}
+
+	/* Cas normal : l'arc a ajouter n'existe pas encore */
+
+	// Ajout d'un arc partant pour le sommet "uiNumeroSommetDepart"
+	pSOMGRAListeSommets[uiIndiceSommetDepart]->SOMAjouterArcPartant(ARCParam);
+
+	// Ajout d'un arc arrivant pour le sommet "uiNumeroSommetArrivee"
+	pSOMGRAListeSommets[uiIndiceSommetArrivee]->SOMAjouterArcArrivant();
+
 }
 
 /************************************************************************************************************************************************
@@ -180,10 +205,10 @@ inline void CGraphe::GRAAjouterArc(unsigned int uiDepart, CArc & ARCParam)
 ************************************************************************************************************************************************/
 inline void CGraphe::GRAModifierArc(unsigned int uiDepart, unsigned int uiArrivee, CArc & ARCParam)
 {
-	/* un des 2 sommets n'existe pas */
+	/* Un des 2 sommets n'existe pas */
 	unsigned int uiIndiceDepart = GEGRechercherIndiceSommet(uiDepart);
 	unsigned int uiIndiceArrivee = GEGRechercherIndiceSommet(uiArrivee);
-	if ((uiIndiceDepart == -1) || (uiIndiceArrivee == -1))
+	if ((uiIndiceDepart == EXC_SOMMET_INEXISTANT) || (uiIndiceArrivee == EXC_SOMMET_INEXISTANT))
 	{
 		CException EXCErreur(EXC_SOMMET_INEXISTANT, "Un des 2 sommets n'existe pas : impossible de modifier.");
 		throw(EXCErreur);
@@ -192,7 +217,7 @@ inline void CGraphe::GRAModifierArc(unsigned int uiDepart, unsigned int uiArrive
 	try
 	{
 		/* on supprime l'ancien arc... */
-		GRASupprimerArc(GEGChercherSourceArcArrivant(ARCParam), ARCParam);
+		GRASupprimerArc(GEGChercherSourceArcArrivant(*pSOMGRAListeSommets[ARCParam.ARCLireNumeroDestination()]), ARCParam);
 
 		/*... et on ajoute l'arc modifie */
 		ARCParam.ARCModifierNumeroDestination(uiArrivee);
@@ -224,14 +249,15 @@ inline void CGraphe::GRASupprimerArc(unsigned int uiDepart, CArc & ARCParam)
 	unsigned int uiIndiceSommetArrivee = GEGRechercherIndiceSommet(ARCParam.ARCLireNumeroDestination());
 
 	/* Un des 2 sommets n'existe pas */
-	if ((uiIndiceSommetDepart == -1) || (uiIndiceSommetArrivee == -1))
+	if ((uiIndiceSommetDepart == EXC_SOMMET_INEXISTANT) || (uiIndiceSommetArrivee == EXC_SOMMET_INEXISTANT))
 	{
 		CException EXCErreur(EXC_SOMMET_INEXISTANT, "Un des 2 sommets n'existe pas : impossible d'ajouter cet arc.");
 		throw(EXCErreur);
 	}
 
-	/* l'arc a supprimer n'existe pas */
-	if ((pSOMGRAListeSommets[uiIndiceSommetDepart]->GEARechercherIndiceArcPartant(ARCParam.ARCLireNumeroDestination()) == -1) && (pSOMGRAListeSommets[uiIndiceSommetArrivee]->GEARechercherIndiceArcArrivant() == -1))
+	/* L'arc a supprimer n'existe pas */
+	if ((pSOMGRAListeSommets[uiIndiceSommetDepart]->GEARechercherIndiceArcPartant(ARCParam.ARCLireNumeroDestination()) == EXC_ARC_INEXISTANT) 
+		&& (pSOMGRAListeSommets[uiIndiceSommetArrivee]->GEARechercherIndiceArcArrivant() == EXC_ARC_INEXISTANT))
 	{
 		CException EXCErreur(EXC_ARC_INEXISTANT, "L'arc n'existe pas : impossible de le supprimer.");
 		throw(EXCErreur);

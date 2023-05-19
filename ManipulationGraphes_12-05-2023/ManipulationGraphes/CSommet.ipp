@@ -2,6 +2,9 @@
 
 #include <cstdlib>
 
+#include <iostream>
+using namespace std;
+
 /****************************************************************************************************
 ***** SOMAJOUTERARCARRIVANT : ajoute un arc arrivant											*****
 *****************************************************************************************************
@@ -12,19 +15,36 @@
 ****************************************************************************************************/
 inline void CSommet::SOMAjouterArcArrivant()
 {
-	pARCSOMListeArcsArrivants = static_cast<CArc **> (realloc(pARCSOMListeArcsArrivants, (uiSOMNombreArcsArrivants + 1) * sizeof(CArc *)));
+	CArc** NouveauxArcs = new CArc*[uiSOMNombreArcsArrivants + 1];
+
+	/* On copie les Arcs existant dans NouveauxArcs */
+	for (unsigned int i = 0; i < uiSOMNombreArcsArrivants; i++)
+	{
+		NouveauxArcs[i] = pARCSOMListeArcsArrivants[i];
+	}
+
+	/* On ajoute un arc a la liste */
+	CArc* NouvelArc = new CArc(SOMLireNumero());
+	NouveauxArcs[uiSOMNombreArcsArrivants] = NouvelArc;
+
+	/* On desalloue la memoire pour l'ancienne liste d'arcs */
+	delete[] pARCSOMListeArcsArrivants;
+
+	/* on fait pointer pSOMGRAListeArcs sur la nouvelle liste */
+	pARCSOMListeArcsArrivants = NouveauxArcs;
+
 	uiSOMNombreArcsArrivants += 1;
 
 	/* On ajoute un element alors que la liste est vide */
 	if (uiSOMNombreArcsArrivants - 1 == 0)
 	{
-		pARCSOMListeArcsArrivants[0] = new CArc(uiSOMNumero);
+		pARCSOMListeArcsArrivants[0] = NouvelArc;
 	}
 
 	/* On ajoute un element a la fin de la liste non vide */
 	else
 	{
-		pARCSOMListeArcsArrivants[uiSOMNombreArcsArrivants - 1] = new CArc(uiSOMNumero);
+		pARCSOMListeArcsArrivants[uiSOMNombreArcsArrivants - 1] = NouvelArc;
 	}
 }
 
@@ -39,27 +59,35 @@ inline void CSommet::SOMAjouterArcArrivant()
 ****************************************************************************************************/
 inline void CSommet::SOMAjouterArcPartant(CArc & ARCParam)
 {
-	pARCSOMListeArcsPartants = static_cast<CArc **> (realloc(pARCSOMListeArcsPartants, (uiSOMNombreArcsPartants + 1) * sizeof(CArc *)));
-	uiSOMNombreArcsPartants += 1;
-
-	/* On ajoute un element alors que la liste est vide */
-	if (uiSOMNombreArcsPartants - 1 == 0)
-	{
-		pARCSOMListeArcsPartants[0] = &ARCParam;
-	}
-
-	/* On verifie que l'arc ne soit pas deja dans la liste */
-	else if (GEARechercherIndiceArcPartant(ARCParam.ARCLireNumeroDestination()) != -1)
+	/* L'arc existe deja dans la liste */
+	if (GEARechercherIndiceArcPartant(ARCParam.ARCLireNumeroDestination()) != EXC_ARC_INEXISTANT)
 	{
 		CException EXCErreur(EXC_ARC_EXISTANT, "L'arc est deja present dans la liste des arcs partants : impossible d'ajouter cet arc.");
 		throw(EXCErreur);
 	}
 
-	/* On ajoute un element avec une liste non vide */
-	else
+	/* Cas normal : l'arc a ajouter n'existe pas encore */
+	CArc** NouveauxArcs = new CArc*[uiSOMNombreArcsPartants + 1];
+
+	/* On copie les Arcs existant dans NouveauxArcs */
+	for (unsigned int i = 0; i < uiSOMNombreArcsPartants; i++)
 	{
-		pARCSOMListeArcsPartants[uiSOMNombreArcsPartants - 1] = &ARCParam;
+		NouveauxArcs[i] = pARCSOMListeArcsPartants[i];
 	}
+
+	/* On ajoute un arc a la liste */
+	NouveauxArcs[uiSOMNombreArcsPartants] = &ARCParam;
+
+	/* On desalloue la memoire pour l'ancienne liste de Arcs */
+	delete[] pARCSOMListeArcsPartants;
+
+	/* on fait pointer pSOMGRAListeArcs sur la nouvelle liste */
+	pARCSOMListeArcsPartants = NouveauxArcs;
+
+	uiSOMNombreArcsPartants += 1;
+
+	/* On ajoute un element avec une liste non vide */
+	pARCSOMListeArcsPartants[uiSOMNombreArcsPartants - 1] = &ARCParam;
 }
 
 
@@ -82,15 +110,15 @@ inline void CSommet::SOMModifierArcPartant(unsigned int uiNumero, CArc & ARCPara
 		CException EXCErreur(EXC_VIOLATION_ACCES, "La liste d'arcs partants est deja vide : impossible de modifier.");
 	}
 
-	/* l'arc n'est pas dans la liste */
+	/* l'arc n'existe pas dans la liste */
 	unsigned int uiIndiceArcPartant = GEARechercherIndiceArcPartant(ARCParam.ARCLireNumeroDestination());
-	if (uiIndiceArcPartant == -1)
+	if (uiIndiceArcPartant == EXC_ARC_INEXISTANT)
 	{
 		CException EXCErreur(EXC_VIOLATION_ACCES, "ARCParam n'est pas dans la liste d'arcs partants : impossible de modifier.");
 	}
 
 	/* On modifie l'arc en un arc qui existe deja  */
-	if (GEARechercherIndiceArcPartant(uiNumero) != -1)
+	if (GEARechercherIndiceArcPartant(uiNumero) != EXC_ARC_INEXISTANT)
 	{
 		CException EXCErreur(EXC_ARC_EXISTANT, "l'arc modifie devient un arc qui existe deja : impossible de modifier.");
 		throw EXCErreur;
@@ -118,6 +146,9 @@ inline void CSommet::SOMSupprimerArcArrivant()
 		CException EXCErreur(EXC_VIOLATION_ACCES, "La liste d'arcs arrivants est deja vide : impossible de supprimer.");
 		throw EXCErreur;
 	}
+
+	/* On desalloue la memoire de l'arc arrivant supprime */
+	delete pARCSOMListeArcsArrivants[0];
 
 	/* Cas normal : on decale tous les elements a droite de celui a supprimer a gauche  */
 	for (unsigned int uiBoucle = 0; uiBoucle < uiSOMNombreArcsArrivants - 1; uiBoucle++)
@@ -148,13 +179,19 @@ inline void CSommet::SOMSupprimerArcPartant(CArc & ARCParam)
 		throw EXCErreur;
 	}
 
-	/* On supprime un arc hors de la liste */
+	/* On supprime un arc qui n'existe pas dans la liste */
 	unsigned int uiIndiceArcPartant = GEARechercherIndiceArcPartant(ARCParam.ARCLireNumeroDestination());
-	if (uiIndiceArcPartant == -1)
+	if (uiIndiceArcPartant == EXC_ARC_INEXISTANT)
 	{
 		CException EXCErreur(EXC_VIOLATION_ACCES, "l'arc a supprimer n'est pas dans la liste : impossible de supprimer.");
 		throw EXCErreur;
 	}
+
+	/* On desalloue la memoire de l'arc partant supprime */
+	uiIndiceArcPartant = GEARechercherIndiceArcPartant(ARCParam.ARCLireNumeroDestination());
+
+	cout << "Dans SOMSupprimerArcPartant, uiIndiceArcPartant vaut " << uiIndiceArcPartant << endl;
+	cout << "la taille de pARCSOMListeArcsPartants est " << SOMLireNombreArcsPartants() << endl;
 
 	/* Cas normal : on decale tous les elements a droite de celui a supprimer a gauche  */
 	for (unsigned int uiBoucle = uiIndiceArcPartant; uiBoucle < uiSOMNombreArcsPartants - 1; uiBoucle++)
