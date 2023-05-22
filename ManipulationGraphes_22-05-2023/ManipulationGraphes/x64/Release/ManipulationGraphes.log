@@ -1,0 +1,18 @@
+﻿  CGestionGraphe.cpp
+  CFichierGraphe.cpp
+c:\users\administrateur\desktop\manipulationgraphes_22-05-2023\manipulationgraphes\cfichiergraphe.cpp(74): error C2065: 'CGraphe' : identificateur non déclaré
+c:\users\administrateur\desktop\manipulationgraphes_22-05-2023\manipulationgraphes\cfichiergraphe.cpp(74): error C2065: 'pGRAGraphe' : identificateur non déclaré
+c:\users\administrateur\desktop\manipulationgraphes_22-05-2023\manipulationgraphes\cfichiergraphe.cpp(74): error C2061: erreur de syntaxe : identificateur 'CGraphe'
+c:\users\administrateur\desktop\manipulationgraphes_22-05-2023\manipulationgraphes\cfichiergraphe.cpp(147): error C2065: 'CSommet' : identificateur non déclaré
+c:\users\administrateur\desktop\manipulationgraphes_22-05-2023\manipulationgraphes\cfichiergraphe.cpp(147): error C2065: 'pSOMSommet' : identificateur non déclaré
+c:\users\administrateur\desktop\manipulationgraphes_22-05-2023\manipulationgraphes\cfichiergraphe.cpp(147): error C2061: erreur de syntaxe : identificateur 'CSommet'
+c:\users\administrateur\desktop\manipulationgraphes_22-05-2023\manipulationgraphes\cfichiergraphe.cpp(148): error C2065: 'pGRAGraphe' : identificateur non déclaré
+c:\users\administrateur\desktop\manipulationgraphes_22-05-2023\manipulationgraphes\cfichiergraphe.cpp(148): error C2065: 'pSOMSommet' : identificateur non déclaré
+c:\users\administrateur\desktop\manipulationgraphes_22-05-2023\manipulationgraphes\cfichiergraphe.cpp(196): error C2065: 'CArc' : identificateur non déclaré
+c:\users\administrateur\desktop\manipulationgraphes_22-05-2023\manipulationgraphes\cfichiergraphe.cpp(196): error C2146: erreur de syntaxe : absence de ';' avant l'identificateur 'ARCArrivant'
+c:\users\administrateur\desktop\manipulationgraphes_22-05-2023\manipulationgraphes\cfichiergraphe.cpp(196): error C3861: 'ARCArrivant' : identificateur introuvable
+c:\users\administrateur\desktop\manipulationgraphes_22-05-2023\manipulationgraphes\cfichiergraphe.cpp(198): error C2065: 'pGRAGraphe' : identificateur non déclaré
+c:\users\administrateur\desktop\manipulationgraphes_22-05-2023\manipulationgraphes\cfichiergraphe.cpp(198): error C2065: 'ARCArrivant' : identificateur non déclaré
+  CGraphe.cpp
+  CSommet.cpp
+  ManipulationGraphes.cpp
