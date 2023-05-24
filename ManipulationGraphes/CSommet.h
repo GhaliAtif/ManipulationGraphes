@@ -81,9 +81,9 @@ public:
 	***** Sortie: CArc** pARCSOMListeArcsArrivants								*****
 	***** Entraine : renvoie la valeur de pARCSOMListeArcsArrivants				*****
 	********************************************************************************/
-	CArc** SOMLireListeArcsArrivants()
+	CArc* SOMLireListeArcsArrivants(int iIndice)
 	{
-		return pARCSOMListeArcsArrivants;
+		return pARCSOMListeArcsArrivants[iIndice];
 	}
 
 	/********************************************************************************
@@ -94,9 +94,9 @@ public:
 	***** Sortie: CArc** pARCSOMListeArcsPartants								*****
 	***** Entraine : renvoie la valeur de pARCSOMListeArcsPartants				*****
 	********************************************************************************/
-	CArc** SOMLireListeArcsPartants()
+	CArc* SOMLireListeArcsPartants(int iIndice)
 	{
-		return pARCSOMListeArcsPartants;
+		return pARCSOMListeArcsPartants[iIndice];
 	}
 
 	/************************************************************************************
@@ -193,6 +193,8 @@ public:
 
 
 	CSommet(unsigned int uiNumeroSommet);
+
+	CSommet& SOMInverserArrivantPartant();
 
 };
 

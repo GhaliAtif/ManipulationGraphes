@@ -251,3 +251,13 @@ void CGraphe::GRAModifierArc(unsigned int iAncienDepart, unsigned int iAncienneD
 }
 
 
+CGraphe& CGraphe::GRAInverserGraphe() {
+
+	CGraphe* pGRAGraphe = new CGraphe();
+
+	for (unsigned int uiBoucleSommet = 0; uiBoucleSommet < uiNombreSommets; uiBoucleSommet++) {
+		pGRAGraphe->GRAAjouterSommet(pSOMGRAListeSommets[uiBoucleSommet]->SOMInverserArrivantPartant());
+	}
+
+	return *pGRAGraphe;
+}

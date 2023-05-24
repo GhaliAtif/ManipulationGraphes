@@ -150,7 +150,7 @@ public:
 	*********************************************************************************************************************************************************************/
 	void GRAModifierArc(unsigned int iAncienSommetDepart,unsigned int iAncienSommetDestination,unsigned int iNouveauSommetDepart,unsigned int iNouveauSommetDestination);
 
-
+	CGraphe& GRAInverserGraphe();
 
 };
 

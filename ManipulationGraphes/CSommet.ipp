@@ -211,3 +211,4 @@ inline void CSommet::SOMSupprimerArcPartant(unsigned int uiPosition)
 
 	pARCSOMListeArcsPartants = static_cast<CArc **> (realloc(pARCSOMListeArcsPartants, uiSOMNombreArcsPartants * sizeof(CArc *)));
 }
+

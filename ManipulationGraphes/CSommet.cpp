@@ -79,3 +79,21 @@ CSommet::CSommet(unsigned int uiNumeroSommet)
 	pARCSOMListeArcsArrivants = nullptr;
 	pARCSOMListeArcsPartants = nullptr;
 }
+
+
+CSommet& CSommet::SOMInverserArrivantPartant() {
+
+	CSommet* pSOMSommet = new CSommet(uiSOMNumero);
+
+	for (unsigned int uiBoucleArrivant = 0; uiBoucleArrivant < uiSOMNombreArcsArrivants; uiBoucleArrivant) {
+
+		pSOMSommet->SOMAjouterArcArrivant(SOMLireListeArcsPartants(uiBoucleArrivant));
+	}
+
+	for (unsigned int uiBouclePartant = 0; uiBouclePartant < uiSOMNombreArcsPartants; uiBouclePartant) {
+
+		pSOMSommet->SOMAjouterArcPartant(SOMLireListeArcsArrivants(uiBouclePartant));
+	}
+
+	return *pSOMSommet;
+}

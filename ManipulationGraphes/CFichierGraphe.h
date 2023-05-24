@@ -33,11 +33,11 @@ public:
 
 
 	/*****************************************************************************************************
-	***** CFichierGraphe(CFichierGraphe &FIGParam): Constructeur de recopie de CFichierGraphe		 *****				 *****
+	***** CFichierGraphe(CFichierGraphe &FIGParam): Constructeur de recopie de CFichierGraphe		 *****				 
 	*****			prenant en paramètre un CFichierGraphe											 *****
 	******************************************************************************************************
 	***** Entrée: (rien)																			 *****
-	***** Nécessite:	CFichier &FIGParam doit être initialisé										 *****								 *****
+	***** Nécessite:	CFichier &FIGParam doit être initialisé										 *****								 
 	***** Sortie: (rien)																			 *****
 	***** Entraîne :	Modification du nom du fichier												 *****
 	******************************************************************************************************/
@@ -68,7 +68,7 @@ public:
 
 
 	/************************************************************************************************
-	*****FIGModifierNomFichier(const char * pcNom):FIGModifierNomFichier(const char * pcNom)	*****							 *****
+	*****FIGModifierNomFichier(const char * pcNom):FIGModifierNomFichier(const char * pcNom)	*****							 
 	*************************************************************************************************
 	***** Entrée: (rien)																		*****
 	***** Nécessite:	(rien)																    *****
