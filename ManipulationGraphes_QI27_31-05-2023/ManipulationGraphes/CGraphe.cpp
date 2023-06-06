@@ -132,55 +132,53 @@ void CGraphe::operator=(CGraphe & GRAParam)
 
 bool CGraphe::GRAVerifierExistanceColoration(unsigned int uiNombreCouleurs)
 {
-	/* si tous les sommets de CGraphe sont colories, retourner vrai */
-	if (GRAVerifierSommetsTousColories() == true) 
-	{
-		return true;
-	}
 
-	/* sinon */
-	else 
+	/* pour chaque sommet de CGraphe... */
+	for (unsigned int uiBoucle = 0; uiBoucle < GRALireNombreSommets(); uiBoucle++) 
 	{
 
-		/* pour chaque sommet de CGraphe... */
-		for (unsigned int uiBoucle = 0; uiBoucle < GRALireNombreSommets(); uiBoucle++) 
+		/*...si le sommet n'est pas colorie */
+		if (GRALireListeSommets()[uiBoucle]->SOMLireGestionCouleur().GCSPossederCouleur() == false) 
 		{
+			// Pour recuperer les couleurs disponibles du sommet courant
+			unsigned int* couleursDispo = GRARenvoyerCouleursDisponibles(*GRALireListeSommets()[uiBoucle], uiNombreCouleurs);
+			unsigned int tailleCouleursDispo = GRARenvoyerTailleCouleursDisponibles(*GRALireListeSommets()[uiBoucle], uiNombreCouleurs);
 
-			/*...si le sommet n'est pas colorie */
-			if (GRALireListeSommets()[uiBoucle]->SOMLireGestionCouleur().GCSPossederCouleur() == false) 
+			/*test*/
+			static unsigned int nbiterations = 0;
+			cout<<"pour iteration numero "<<nbiterations<<"de mth VerifierExistenceColoration, taillecouleursDispo vaut "<< tailleCouleursDispo <<endl;
+
+			/* Pour chaque couleur disponible, on essaie de colorier le sommet courant */
+			for (unsigned int uiBoucle2 = 0; uiBoucle2 < tailleCouleursDispo; uiBoucle2++) 
 			{
-				// allocation de couleurDispo
-				unsigned int* couleursDispo = new unsigned int[GRANombreSommetsVoisins(*GRALireListeSommets()[uiBoucle])]; 
+				/* Colorie le sommet */
+				GRALireListeSommets()[uiBoucle]->SOMLireGestionCouleur().GCSModifierNumeroCouleur(couleursDispo[uiBoucle2]);
 
-				// couleursDispo contient les couleurs dispo du sommet parcouru
-				couleursDispo = GRARenvoyerCouleursDisponibles(*GRALireListeSommets()[uiBoucle], uiNombreCouleurs); 
 
-				/*si il n'y a pas de couleur disponible, renvoie faux*/
-				if (GRARenvoyerTailleCouleursDisponibles(*GRALireListeSommets()[uiBoucle], uiNombreCouleurs) == 0) 
+				nbiterations++;
+
+				/* Appel recursif avec le graphe mis a jour et les couleurs restantes */
+				if (GRAVerifierExistanceColoration(uiNombreCouleurs)) 
 				{
-					return false;
+					/* Si cet appel renvoie vrai, alors le graphe peut etre colorie */
+					delete[] couleursDispo;
+					return true;
 				}
 
-				/*pour chaque couleur disponible, on colorie le sommet parcouru*/
-				for (unsigned int uiBoucle2 = 0; uiBoucle2 < GRARenvoyerTailleCouleursDisponibles(*GRALireListeSommets()[uiBoucle], uiNombreCouleurs); uiBoucle2++) 
-				{
-					GRALireListeSommets()[uiBoucle]->SOMLireGestionCouleur().GCSModifierNumeroCouleur(couleursDispo[uiBoucle2]);
-
-					/*si pour cette coloration GEGVerifierExistanceColoration renvoie vrai alors on retourne vrai*/
-					if (GRAVerifierExistanceColoration(uiNombreCouleurs) == true) 
-					{
-						return true;
-					}
-
-					// on enleve la couleur au sommet parcouru
-					GRALireListeSommets()[uiBoucle]->SOMLireGestionCouleur().GCSModifierNumeroCouleur(0); 
-				}
-
-				//si pour aucune des colorations GEGVerifierExistanceColoration n'a retourne vrai alors on retourne faux.
-				return false; 
+				// on enleve la couleur au sommet parcouru
+				GRALireListeSommets()[uiBoucle]->SOMLireGestionCouleur().GCSModifierNumeroCouleur(0); 
 			}
+
+			delete[] couleursDispo;
+
+			/* S'il n'existe aucune coloration valide, on renvoie faux */
+			return false; 
 		}
 	}
+
+	/* Cas de base : on a teste tous les sommets sans trouver de coloration adequate */
+	return false; 
+
 }
 
 
@@ -209,11 +207,20 @@ unsigned int * CGraphe::GRARenvoyerCouleursDisponibles(CSommet & SOMParam, unsig
 	unsigned int* compteurCouleur = new unsigned int[uiNombreCouleur];
 
 	/* on affecte chaque couleur a une case du tableau */
-	for (unsigned int uiBoucle = 0; uiBoucle < uiNombreCouleur; uiBoucle++) 
+	for (unsigned int uiNumeroCouleur = 0; uiNumeroCouleur < uiNombreCouleur; uiNumeroCouleur++) 
 	{
 		// la numerotation des couleurs commence a 1, 0 est l'etat sans couleur
-		couleurs[uiBoucle] = uiBoucle + 1; 
+		couleurs[uiNumeroCouleur] = uiNumeroCouleur + 1; 
 	}
+
+
+	/*test*/
+	for (unsigned int i = 0; i < uiNombreCouleur; i++)
+	{
+		cout << "dans CGraphe.cpp, dans mth renvoyercouleursdispo, couleurs a la case " << i << " est " << couleurs[i] << endl;
+
+	}
+
 
 	/* on initialise chaque case de compteurCouleur a 0 */
 	for (unsigned int uiBoucle = 0; uiBoucle < uiNombreCouleur; uiBoucle++) 
@@ -238,10 +245,12 @@ unsigned int * CGraphe::GRARenvoyerCouleursDisponibles(CSommet & SOMParam, unsig
 	}
 	unsigned int taille = 0;
 
-	/*pour chaque case de couleurs*/
-	for (unsigned int uiBoucle = 0; uiBoucle < uiNombreCouleur; uiBoucle++) {
-		/*si la couleur en position uiBoucle n'a pas ete trouve dans les sommets voisin*/
-		if (compteurCouleur[uiBoucle] == 0) {
+	/* pour chaque case de "couleurs" */
+	for (unsigned int uiBoucle = 0; uiBoucle < uiNombreCouleur; uiBoucle++) 
+	{
+		/*si la couleur en position uiBoucle n'a pas ete trouvee dans les sommets voisins*/
+		if (compteurCouleur[uiBoucle] == 0) 
+		{
 			taille++; //la taille que prendra le tableau des couleurs disponible pour un sommet incremente de 1.
 		}
 	}
@@ -250,19 +259,33 @@ unsigned int * CGraphe::GRARenvoyerCouleursDisponibles(CSommet & SOMParam, unsig
 	unsigned int compteurCouleurDispo = 0; //initialise un compteur a 0.
 
 	/*on initialise les cases de couleursDispo a 0*/
-	for (unsigned int uiBoucle = 0; uiBoucle < taille; uiBoucle++) {
+	for (unsigned int uiBoucle = 0; uiBoucle < taille; uiBoucle++) 
+	{
 		couleursDispo[uiBoucle] = 0;
 	}
 
-	/*pour chaques couleurs inferieur a uiNombreCouleur*/
-	for (unsigned int uiBoucle = 0; uiBoucle < uiNombreCouleur; uiBoucle++) {
+	
 
-		/*si la couleur n'est pas presente chez les voisin de SOMParam et inferieur a uiNombreCouleur*/
-		if (compteurCouleur[uiBoucle] == 0 && compteurCouleurDispo < taille) {
+	/* pour chaque couleur */
+	for (unsigned int uiBoucle = 0; uiBoucle < uiNombreCouleur; uiBoucle++) 
+	{
+
+		/* si la couleur n'est pas presente chez les voisins de SOMParam */
+		if (compteurCouleur[uiBoucle] == 0 && compteurCouleurDispo < taille) 
+		{
 			couleursDispo[compteurCouleurDispo] = uiBoucle + 1; //on ajoute cette couleur a couleurDispo 
 			compteurCouleurDispo++;
 		}
 	}
+
+	/*test*/
+	for (unsigned int i = 0; i < taille; i++)
+	{
+		cout << "dans CGraphe.cpp, dans mth renvoyercouleursdispo, couleurDispo a la case " << i << " est " << couleurs[i] << endl;
+
+	}
+
+
 	delete[] compteurCouleur;
 	delete[] couleurs;
 	return couleursDispo;
@@ -277,19 +300,25 @@ unsigned int * CGraphe::GRARenvoyerIndiceSommetsVoisins(CSommet & SOMParam)
 	voisins de SOMParam, dans pSOMGRAListeSommets. */
 	unsigned int* NumeroVoisin = new unsigned int[GRANombreSommetsVoisins(SOMParam)]; 
 
-	/* On parcourt tous les arcs partants de SOMParam pour connaitre 
-	ses voisins */
-	for (unsigned int uiArc = 0; uiArc < SOMParam.SOMLireNombreArcsPartants(); uiArc++)
+	/* On parcourt tous les arcs partants de SOMParam pour connaitre ses voisins */
+	for (unsigned int uiArcPartant = 0; uiArcPartant < SOMParam.SOMLireNombreArcsPartants(); uiArcPartant++)
 	{
-		/* A 1 arc partant donne, on parcourt la liste des sommets pour retrouver
-		l'indice de liste de ce sommet pointe par cet arc */
+		/* A 1 arc partant donne, on parcourt la liste des sommets pour retrouver l'indice de liste de ce sommet pointe par cet arc */
 		for (unsigned int uiSommet = 0; uiSommet < GRALireNombreSommets(); uiSommet++)
 		{
-			if (SOMParam.SOMLireListeArcsPartants(uiArc)->ARCLireNumeroDestination() == GRALireListeSommets()[uiSommet]->SOMLireNumero())
+			if (SOMParam.SOMLireListeArcsPartants(uiArcPartant)->ARCLireNumeroDestination() == GRALireListeSommets()[uiSommet]->SOMLireNumero())
 			{
-				NumeroVoisin[uiArc] = uiSommet;
+				NumeroVoisin[uiArcPartant] = uiSommet;
 			}
 		}
+	}
+
+	/* Apres les voisins connus par les arcs partants de SOMParam, 
+	on rajoute les voisins connus par les arcs arrivants de SOMParam grace a GEGChercherIndiceSourceArcsArrivants */
+	unsigned int * puiSourcesArcsArrivants = GEGChercherIndiceSourceArcsArrivants(SOMParam);
+	for (unsigned int uiArcArrivant = SOMParam.SOMLireNombreArcsPartants(); uiArcArrivant < GRANombreSommetsVoisins(SOMParam); uiArcArrivant++)
+	{
+		NumeroVoisin[uiArcArrivant] = puiSourcesArcsArrivants[uiArcArrivant - SOMParam.SOMLireNombreArcsPartants()];
 	}
 
 	return NumeroVoisin;
@@ -298,17 +327,20 @@ unsigned int * CGraphe::GRARenvoyerIndiceSommetsVoisins(CSommet & SOMParam)
 
 unsigned int CGraphe::GRARenvoyerTailleCouleursDisponibles(CSommet & SOMParam, unsigned int uiNombreCouleur)
 {
-	/* Allocation tableau temporaire qui contiendra
-	toutes les couleurs numerotees de 1 a uiNombreCouleur. */
-	unsigned int* couleurs = new unsigned int[uiNombreCouleur];
+	/* Au depart, tailleCouleursDispo vaut 0 */
+	unsigned int tailleCouleursDispo = 0;
 
 	/* Allocation tableau temporaire qui sera un compteur pour "couleurs". */
 	unsigned int* compteurCouleur = new unsigned int[uiNombreCouleur];
 
-	/*on affecte chaque couleur a une case du tableau*/
+	/* Allocation tableau temporaire qui contiendra
+	toutes les couleurs numerotees de 1 a uiNombreCouleur. */
+	unsigned int* couleurs = new unsigned int[uiNombreCouleur];
+
+	// on affecte chaque couleur a une case du tableau
 	for (unsigned int uiBoucle = 0; uiBoucle < uiNombreCouleur; uiBoucle++) 
 	{
-		// la numerotation des couleurs commence a 1, 0 est l'etat sans couleur
+		// la numerotation des couleurs commence a 1, 0 etant l'etat sans couleur
 		couleurs[uiBoucle] = uiBoucle + 1; 
 	}
 
@@ -318,8 +350,13 @@ unsigned int CGraphe::GRARenvoyerTailleCouleursDisponibles(CSommet & SOMParam, u
 		compteurCouleur[uiBoucle] = 0;
 	}
 
+
+
+
+
 	/*pour chaque sommet voisin de SOMParam*/
-	for (unsigned int uiBoucle = 0; uiBoucle < GRANombreSommetsVoisins(SOMParam); uiBoucle++) 
+	unsigned int uiNombreVoisins = GRANombreSommetsVoisins(SOMParam);
+	for (unsigned int uiBoucle = 0; uiBoucle < uiNombreVoisins; uiBoucle++) 
 	{
 
 		/* pour chaque couleur */
@@ -335,8 +372,6 @@ unsigned int CGraphe::GRARenvoyerTailleCouleursDisponibles(CSommet & SOMParam, u
 		}
 	}
 
-	unsigned int tailleCouleurDispo = 0;
-
 	/*pour chaque case de couleurs*/
 	for (unsigned int uiBoucle = 0; uiBoucle < uiNombreCouleur; uiBoucle++) 
 	{
@@ -345,15 +380,18 @@ unsigned int CGraphe::GRARenvoyerTailleCouleursDisponibles(CSommet & SOMParam, u
 		if (compteurCouleur[uiBoucle] == 0) 
 		{
 			//la taille que prendra le tableau des couleurs disponibles, pour un sommet, est incrementee de 1.
-			tailleCouleurDispo++; 
+			tailleCouleursDispo++; 
 		}
 	}
+
+	cout << "dans CGraphe.cpp, dans mth taillecouleursdispo, taillecouleursdispo vaut" << tailleCouleursDispo << endl;
+
 
 	/* On fait delete aux tableaux initialises avec new */
 	delete[] compteurCouleur;
 	delete[] couleurs;
 
-	return tailleCouleurDispo;
+	return tailleCouleursDispo;
 }
 
 

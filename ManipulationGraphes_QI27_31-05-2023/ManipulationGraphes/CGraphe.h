@@ -156,8 +156,9 @@ class CGraphe
 		unsigned int GRANombreSommetsVoisins(CSommet & SOMParam)
 		{
 			// retourne le nombre de sommets voisins de SOMParam
-			return SOMParam.SOMLireNombreArcsPartants(); 
+			return SOMParam.SOMLireNombreArcsPartants() + SOMParam.SOMLireNombreArcsArrivants(); 
 		}
+
 		bool GRAVerifierExistanceColoration(unsigned int uiNombreCouleurs);
 		bool GRAVerifierSommetsTousColories();
 		unsigned int * GRARenvoyerCouleursDisponibles(CSommet & SOMParam, unsigned int uiNombreCouleur);
