@@ -1,0 +1,62 @@
+	/* pour chaque sommet de CGraphe... */
+	for (unsigned int uiSommet = 0; uiSommet < GRALireNombreSommets(); uiSommet++)
+	{
+		
+
+		/*...si le sommet n'est pas colorie */
+		if (SOMSommet.SOMLireGestionCouleur().GCSPossederCouleur(0) == true)
+		{
+			// Pour recuperer les couleurs disponibles du sommet courant
+
+
+			/* Aucune couleur n'est disponible pour colorier le sommet courant */
+			if (uiTailleCouleursDisponibles == 0)
+			{
+				return false;
+			}
+
+
+			/*test*/
+			static unsigned int nbiterations = 0;
+			cout << "pour iteration numero " << nbiterations << " de mth VerifierExistenceColoration : " << endl;
+			cout << "uiTailleCouleursDisponibles vaut " << uiTailleCouleursDisponibles << endl;
+			for (unsigned int i = 0; i < uiTailleCouleursDisponibles; i++)
+			{
+				cout << "ds CGraphe.cpp, ds mth VerifierExistenceColoration, a la case "<<i<<", puiCouleursDisponibles vaut " << puiCouleursDisponibles[i] << endl;
+
+			}
+
+
+
+
+			/* Pour chaque couleur disponible, on essaie de colorier le sommet courant */
+			for (unsigned int uiBoucle2 = 0; uiBoucle2 < uiTailleCouleursDisponibles; uiBoucle2++)
+			{
+				/* Colorie le sommet */
+				SOMSommet.SOMLireGestionCouleur().GCSModifierNumeroCouleur(puiCouleursDisponibles[uiBoucle2]);
+
+				/* test */
+				cout << "la couleur de SOMSommet est " << SOMSommet.SOMLireGestionCouleur().GCSLireNumeroCouleur() << endl;
+				nbiterations++;
+
+				/* Appel recursif avec le sommet courant colorie et les couleurs restantes */
+				if (GRAVerifierExistanceColoration(uiNombreCouleurs))
+				{
+					/* Si cet appel renvoie vrai, alors le graphe peut etre colorie */
+					delete[] puiCouleursDisponibles;
+					return true;
+				}
+
+				/* Sinon, c'est qu'il n'y a pas de coloration satisfaisante : on passe a la couleur disponible suivante */
+				SOMSommet.SOMLireGestionCouleur().GCSModifierNumeroCouleur(0);
+			}
+
+			/* Si toutes les couleurs disponibles n'ont pas pu donner une coloration satisfaisante du sommet,
+			on renvoie faux */
+			delete[] puiCouleursDisponibles;
+			return false;
+		}
+	}
+
+
+}
